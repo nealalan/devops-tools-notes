@@ -21,7 +21,7 @@
 
 ## Vagrant - [vagrantup.com](https://www.vagrantup.com/docs/)
 
-- Tool for building and managing virtual machine environments
+- **Tool for building and managing virtual machine environments**
 - Allow single work flow for spinning up environments. Dev can mirror Prod.
 - Machines provisioned on a provider (Docker, AWS, etc)
 
@@ -44,6 +44,8 @@ DOWNLOAD: [https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/d
 ### About Vagrantfiles
 
 A file that describes, configures, and provisions the machines you'll need.
+
+Available boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
 
 ### Use (Mac)
 
@@ -111,8 +113,118 @@ $ docker ps
 $ docker exec -i -t [container-id] /bin/bash
 ```
 
+### Mapping files
 
+- Map the local file (in the host vagrant file folder) to the folder on the virtual machine
+```bash
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.synced_folder ".", "/vagrant"
+end
+```
+### Connecting to vagrant with SSH
+- Use SSH versus VAGRANT SSH to connect from the localhost to vagrant
 
+```bash
+$ ssh vagrant@localhost -p 2222 -i ~/.vagrant.d/insecure_private_key
+```
+
+- default password is vagrant
+- to get the info from vagrant...
+
+```bash
+$ vagrand ssh-config
+```
+
+### Provisioning in the shell and w/ puppet
+
+- Sample Vagrantfile: [https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet](https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet)
+- Clone: 
+```bash
+$ git clone https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet.git vagrant
+```
+
+Setup the vagrant file...
+```bash
+Vagrant.configure("2") do |config|
+  config.vm.define "web" do |web|
+    web.vm.box = "ubuntu/trusty64"
+    web.vm.hostname = "web.vagrant.vm"
+  end
+  
+  config.vm.define "db" do |db|
+    db.vm.box = "ubuntu/trusty64"
+    db.vm.hostname = "db.vagrant.vm"
+  end
+end
+```
+
+- launch the webserver only
+```bash
+$ vagrant up web
+```
+
+- Add provisioning to the Vagrantfile
+```bash
+Vagrant.configure("2") do |config|
+  config.vm.define "web" do |web|
+    web.vm.box = "ubuntu/trusty64"
+    web.vm.hostname = "web.vagrant.vm"
+    web.vm.provision "she;;" do |shell|
+      shell.inline = "apt update -y
+      shell.inline = "apt install apache2 -y"
+    end
+  end
+  
+  config.vm.define "db" do |db|
+    db.vm.box = "ubuntu/trusty64"
+    db.vm.hostname = "db.vagrant.vm"
+  end
+end
+```
+
+- relaunch
+```bash
+$ vagrant reload --provision
+```
+
+- Add Puppet provider to the Vagrantfile
+```bash
+Vagrant.configure("2") do |config|
+  config.vm.define "web" do |web|
+    web.vm.box = "ubuntu/trusty64"
+    web.vm.hostname = "web.vagrant.vm"
+    web.vm.provision "she;;" do |shell|
+      shell.inline = "apt update -y
+      shell.inline = "apt install apache2 -y"
+    end
+  end
+  
+  config.vm.define "db" do |db|
+    db.vm.box = "ubuntu/trusty64"
+    db.vm.hostname = "db.vagrant.vm"
+    db.vm.provision "puppet" do |puppet|
+      puppet.manifest_path = "puppet/manifests"
+      puppet.manifest_file = "default.pp"
+      puppet.module_path = "puppet/modules"
+      puppet.hiera_config_path = "puppet/hiera.yaml"
+    end
+  end
+end
+```
+
+- ensure we didn't create any errors in the Vagrantfile
+- launch the db server
+```bash
+$ vagrant validate
+$ vagrant up db
+# once server launches...
+$ vagrant ssh db
+$ sudo su
+$ mysql
+```
+
+- mysql is installed
 
 
 ## Packer 
