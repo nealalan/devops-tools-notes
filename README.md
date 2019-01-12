@@ -8,7 +8,7 @@
   - Configuration Management - [Puppet]()
   - Configuration Management - [Chef]()
   - Configuration Management - [Ansible]()
-  - Container Management - [Docker]() [Docker Compose]() [Docker Swarm]() [Docker Machine]()
+  - Container Management - [Docker](), [Docker Compose](), [Docker Swarm](), [Docker Machine]()
   - Container Management - [Kubernetes]()
   - SW Eng - [Methodologies]()
   - SW Eng - [Jenkins]()
