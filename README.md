@@ -3,17 +3,17 @@
 # [nealalan.github.io](https://nealalan.github.io)/[devops-tools-notes](https://nealalan.github.io/devops-tools-notes)
 
 ## TOC
-  - Machine Deployment - [Vagrant]()
-  - Machine Deployment - [Packer]()
-  - Configuration Management - [Puppet]()
-  - Configuration Management - [Chef]()
-  - Configuration Management - [Ansible]()
-  - Container Management - [Docker](), [Docker Compose](), [Docker Swarm](), [Docker Machine]()
-  - Container Management - [Kubernetes]()
-  - SW Eng - [Methodologies]()
-  - SW Eng - [Jenkins]()
-  - SW Eng - [GIT]()
-  - SW Eng - [Prod Concepts]()
+  - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
+  - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer)
+  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet)
+  - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
+  - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
+  - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
+  - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
+  - SW Eng - [Methodologies](https://nealalan.github.io/devops-tools-notes/#methodologies)
+  - SW Eng - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
+  - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
+  - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
   
   
   
