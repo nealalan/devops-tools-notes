@@ -122,7 +122,7 @@ $ ssh vagrant@localhost -p 2222 -i ~/.vagrant.d/insecure_private_key
 - to get the info from vagrant...
 
 ```bash
-$ vagrand ssh-config
+$ vagrant ssh-config
 ```
 
 ### Provisioning using vagrant in the shell and w/ puppet
@@ -214,6 +214,37 @@ $ vagrant ssh db
 $ sudo su
 $ mysql
 ```
+
+### Vagrant on CentOS Lab Notes
+
+```bash
+# check for docker
+$ docker -v
+
+# install vagrant - link from the downloads section
+$ sudo yum install -y https://releases.hashicorp.com/vagrant/2.2.3/vagrant_2.2.3_x86_64.rpm
+$ vagrant -v 
+
+$ create Vagrantfile and map host port to vagrant port 80:2368
+$ sudo yum install nano
+$ nano Vagrantfile
+Vagrant.configure("2") do |config|
+  config.vm.provider "docker" do |d|
+    d.image = "ghost"
+    d.ports = ["80:2368"]
+  end
+end
+
+# launch and verify
+$ sudo vagrant up
+$ docker ps
+$ docker images
+$ curl http://localhost
+
+# pull up web browser
+
+```
+
 
 ## Packer 
 
