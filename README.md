@@ -24,30 +24,16 @@
 - **Tool for building and managing virtual machine environments**
 - Allow single work flow for spinning up environments. Dev can mirror Prod.
 - Machines provisioned on a provider (Docker, AWS, etc)
+- Vagrantfiles describes, configures, and provisions the machines you'll need.
+- Available boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
 
-### Install (Mac)
 
-Can download from the hasicorp sites or use brew...
+### Installing on a Mac
 
-```bash
-$ brew install vagrant-completion
-# OR
-$ brew upgrade vagrant-completion
+1. Can download from the hasicorp vagrantup site. DOWNLOAD: [https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/downloads.html)
+2. use brew... I tried this method, however vagrant 2.0.0 had been previously installed and no longer works. But the system will not use the latest version. Tried uninstalling and deleting everything I can but still can't use the version installed with brew.
 
-$ vagrant -v
-```
-
-I tried this method, however vagrant 2.0.0 had been previously installed and no longer works. But the system will not use the latest version. Tried uninstalling and deleting everything I can but still can't use the version installed with brew.
-
-DOWNLOAD: [https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/downloads.html)
-
-### About Vagrantfiles
-
-A file that describes, configures, and provisions the machines you'll need.
-
-Available boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
-
-### Use (Mac)
+### Use on a Mac
 
 0. Install the latest version of [VirtualBox](https://www.virtualbox.org/wiki/Downloads). I had a version that was out of date and would no longer run on MacOS.
 
@@ -82,20 +68,20 @@ $ vagrant ssh default
 ```bash
 $ vagrant destroy
 ```
-
-
-ALSO:
+- Additional Commands :
 ```bash
 # make sure your vagrant file is valid
 $ vagrant validate
-#
+
 $ vagrant provision
+
 # runs a half and an up
 $ vagrant reload
 ```
 
-### Use (docker) and [Vagrantfile](https://www.vagrantup.com/docs/vagrantfile/)
+### Use Vagrant with Docker
 
+1. Configure your [Vagrantfile](https://www.vagrantup.com/docs/vagrantfile/). This will pull down a **ghost blog container** to run in docker and **map port 80** to 2368 on the counter
 ```bash
 Vagrant.configure("2") do |config|
   config.vm.provider "docker" do |d|
@@ -104,12 +90,13 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
-- Pull down a container ghost blog and run in docker.
-- Map port 80 to 2368 on the counter
-
+2. Run vagrant
+```bash
+$ vagrant up
+```
+3. Find the docker container ID and connect to docker instance
 ```bash
 $ docker ps
-
 $ docker exec -i -t [container-id] /bin/bash
 ```
 
@@ -122,7 +109,9 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant"
 end
 ```
+
 ### Connecting to vagrant with SSH
+
 - Use SSH versus VAGRANT SSH to connect from the localhost to vagrant
 
 ```bash
@@ -136,15 +125,14 @@ $ ssh vagrant@localhost -p 2222 -i ~/.vagrant.d/insecure_private_key
 $ vagrand ssh-config
 ```
 
-### Provisioning in the shell and w/ puppet
+### Provisioning using vagrant in the shell and w/ puppet
 
-- Sample Vagrantfile: [https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet](https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet)
-- Clone: 
+1. Clone Sample Vagrantfile: [https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet](https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet)
 ```bash
 $ git clone https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet.git vagrant
 ```
 
-Setup the vagrant file...
+2. Setup the vagrant file...
 ```bash
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
@@ -159,12 +147,12 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-- launch the webserver only
+3. launch the webserver only
 ```bash
 $ vagrant up web
 ```
 
-- Add provisioning to the Vagrantfile
+4. Add provisioning to the Vagrantfile
 ```bash
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
@@ -183,12 +171,12 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-- relaunch
+5. relaunch what is up (only the web so far)
 ```bash
 $ vagrant reload --provision
 ```
 
-- Add Puppet provider to the Vagrantfile
+6. Add Puppet provider to the Vagrantfile
 ```bash
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
@@ -213,19 +201,19 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-- ensure we didn't create any errors in the Vagrantfile
-- launch the db server
+7. Validate for errors in Vagrantfile and launch the db server
 ```bash
 $ vagrant validate
 $ vagrant up db
+```
+
+8. Connect to the container and verify mysql is installed
+```bash
 # once server launches...
 $ vagrant ssh db
 $ sudo su
 $ mysql
 ```
-
-- mysql is installed
-
 
 ## Packer 
 
