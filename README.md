@@ -15,8 +15,6 @@
   - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
   - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
   
-  
-  
 # Machine Delopyment
 
 ## Vagrant - [vagrantup.com](https://www.vagrantup.com/docs/)
@@ -300,7 +298,89 @@ $ vagrant reload
 
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-18%20at%206.49.13%20PM.jpg?raw=true)
 
+### Vagrant Box Files
+
+- packaging format for vagrant 
+- great for versioning changes, go back, fix a problem and rolls it out
+- Download Vagrant Boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
+
+```bash
+$ vagrant box add <ADDRESS>
+$ vagrant box list
+# tell you if box is outdated
+$ vagrant box outdated
+# prune out old versions of boxes
+$ vagrant box prune
+# remove a specific box
+$ vagrant box remove <NAME>
+# repackage - reconstruct the box file
+$ vagrant box repackage <NAME> <PROVIDER> <VERSION>
+# download and install the new box and you must update the individual running box
+$ vagrant box update
+# automatically create the Vagrantfile for precise64
+$ vagrant init hashicorp/precise64
+```
+
+### Creating a Box with Vagrant
+
+1. Go into project folder "vagrant_box"
+2. Download Ubuntu 18.04 using curl
+3. Open virtual box and create a new box "ubuntu64-base, 512MB, 40GB, dynamic alloc
+4. Disable audio, USB, set network port forwarding SSH 2222:22
+5. Setup storage, CD-ROM, Virtual, vagrant_box, d/l file
+6. Networking, set as NAT
+7. Start machine in Virtual box, setup, add User: vagrant Pass: vagrant
+8. Guided install for disk, automatically add security updates
+9. Software Selection: OpenSSH Server, Basic Ubuntu Server, Yes for GRUB
+10. Before restart, In Virtual Box: Eject the disk
+11. Log into Ubuntu instance
+12. Setup security
+```bash
+$ passwd root; vagrant
+$ echo "vagrant ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers.d/vagrant
+```
+13. Get the vagrant public key: [https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub](https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub)
+14. Get the key, setup SSH, install packages
+```bash
+$ mkdir /home/vagrant/.ssh
+$ chmod 0700 /home/vagrant/.ssh
+$ wget https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+$ mv vagrant.pub authorized_keys
+$ chmod 600 authorized_keys
+$ chown -R vagrant ~/.ssh/
+$ echo "AuthorizedKeysFile %h/.ssh/authorized_keys" | tee -a /etc/ssh/sshd_config
+$ service ssh restart
+$ apt install -y gcc build-essential git linux-headers-$(uname -r) dkms
+```
+15. VirtualBox Menu Bar: Devices: Insert Guest Additions CD image
+```bash
+$ mount /dev/cdrom /mnt
+$ /mnt/VBoxLinuxAdditions.run
+```
+16. Compress all empty space out of filesystem
+```bash
+$ dd if=/dev/zero of=/EMPTY bs=1M
+$ rm -f /EMPTY
+```
+17. Turn Ubuntu into a Vagrant Box from home OS to create a package.box
+```bash
+$ vagrant package --base ubuntu64-base
+
+$ vagrant box add ubuntu64 package.box
+
+$ vagrant box list
+```
+18. Run the new box and connect!
+```bash
+$ vagrant init ubuntu64 -m
+$ cat Vagrantfile
+$ vagrant up
+$ vagrant ssh
+```
+
+
 ## Packer 
+
 
 
 # Configuration Management
