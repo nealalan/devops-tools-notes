@@ -245,6 +245,60 @@ $ curl http://localhost
 
 ```
 
+### Use Vagrant and Docker to Build a DEV Env
+
+1. Log into instance with Vagrant and Docker installed
+2. Setup Dockerfile
+```bash
+$ sudo su
+$ yum install nano
+$ cd root/docker
+$ nano Dockerfile
+
+FROM node:alpine
+COPY code /code
+WORKDIR /code
+RUN npm install
+EXPOSE 3000
+CMD ["node", "app.js"]
+```
+
+3. Setup Dockerfile
+```bash
+$ nano Vagrantfile
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = "docker"
+
+Vagrant.configure("2") do |config|
+  config.vm.provider "docker" do |d|
+    d.build_dir = "."
+    d.ports = ["80:3000"]
+  end
+end
+```
+
+4. Use Vagrant to launch the Docker image "node:alpine"
+```bash
+$ mkdir code
+$ vagrant validate
+$ vagrant up
+
+$ docker images
+$ docker ps
+```
+
+5. see if the docker:alpine image port 3000 is mapped to localhost:80
+```bash
+$ curl localhost
+
+```
+
+6. to edit the js code... just cd into the code/ folder
+```bash
+$ vagrant reload
+```
+
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-18%20at%206.49.13%20PM.jpg?raw=true)
 
 ## Packer 
 
