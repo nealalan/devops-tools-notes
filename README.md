@@ -309,19 +309,26 @@ $ vagrant box add <ADDRESS>
 $ vagrant box list
 # tell you if box is outdated
 $ vagrant box outdated
+$ vagrant box outdated --global
 # prune out old versions of boxes
 $ vagrant box prune
+$ vagrant box prune -n
 # remove a specific box
 $ vagrant box remove <NAME>
 # repackage - reconstruct the box file
 $ vagrant box repackage <NAME> <PROVIDER> <VERSION>
+$ vagrant box repackage ubuntu64 virtualbox 0
 # download and install the new box and you must update the individual running box
 $ vagrant box update
+$ vagrant box update --box centos/7 
+# remove and readd box
+$ vagrant box remove ubuntu64
+$ vagrant box add ubuntu64
 # automatically create the Vagrantfile for precise64
 $ vagrant init hashicorp/precise64
 ```
 
-### Creating a Box with Vagrant
+### Creating a Vagrant Box file
 
 1. Go into project folder "vagrant_box"
 2. Download Ubuntu 18.04 using curl
