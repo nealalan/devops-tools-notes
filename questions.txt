@@ -1,0 +1,17 @@
+When executing a vagrant init, what flag would you use to overwrite a Vagrantfile if one has already been created.
+vagrant -f
+
+Which command returns all installed boxes?
+vagrant box list
+
+When executing vagrant destroy, what flag would you use so that you are not prompted to confirm that you want to destroy the resources?
+vagrant -f
+
+What are the three ways that Vagrant will try and detect a provider?
+Execute vagrant up with the --provider flag.
+Use the VAGRANT_DEFAULT_PROVIDER environmental variable in your Vagrantfile. Example: ENV['VAGRANT_DEFAULT_PROVIDER'] = ''
+Vagrant will go through all of the config.vm.provider calls in the Vagrantfile and try each in order.
+
+Fill in the blank. The primary function of the _ _ _ _ _ _ _ _ _ is to describe the type of machine required for a project, and how to configure and provision these machines.
+Vagrantfile
+
