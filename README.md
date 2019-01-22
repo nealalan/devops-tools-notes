@@ -385,6 +385,12 @@ $ vagrant up
 $ vagrant ssh
 ```
 
+### Box file format
+
+- Can create a box file
+- Can download a box file
+- METADATA.JSON - lists metadata for box
+- PACKAGE.BOX - box information file
 
 ## Packer 
 
