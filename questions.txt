@@ -15,3 +15,22 @@ Vagrant will go through all of the config.vm.provider calls in the Vagrantfile a
 Fill in the blank. The primary function of the _ _ _ _ _ _ _ _ _ is to describe the type of machine required for a project, and how to configure and provision these machines.
 Vagrantfile
 
+What file format should the info file be in?
+JSON
+
+When creating a base box, what are the default settings that should configured?
+Set the root password to vagrant.
+Create a vagrant user for SSH access to the machine.
+Configure the SSH user to have passwordless sudo configured.
+
+Which of these is true about Docker Base Boxes?
+The Docker provider does not require a Vagrant box.
+
+Which of the following commands will create a new Box file from a Box imported into Vagrant.
+vagrant box repackage
+
+What are the three different components of a Box?
+A Box Information File
+A Box Catalog Metadata File
+A Box File
+
