@@ -4,9 +4,8 @@
 
 ## TOC
   - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
-
-  - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer)
-  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) & Cloud Init
+  - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
+  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
@@ -20,7 +19,7 @@
 - Vagrant = single work flow for spinning up environments
 - Vagrant box = packaging format for vagrant 
 - Packer = Create machine images for multiple platforms with a single custom config
-
+- Cloud-init = Python scripts & Utils to handle early init of cloud instances
   
 # Machine Delopyment
 
@@ -247,7 +246,6 @@ $ docker images
 $ curl http://localhost
 
 # pull up web browser
-
 ```
 
 ### Use Vagrant and Docker to Build a DEV Env
