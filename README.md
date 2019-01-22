@@ -4,8 +4,9 @@
 
 ## TOC
   - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
+
   - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer)
-  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet)
+  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) & Cloud Init
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
@@ -14,6 +15,12 @@
   - SW Eng - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
   - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
   - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
+  
+## DEFINITIONS
+- Vagrant = single work flow for spinning up environments
+- Vagrant box = packaging format for vagrant 
+- Packer = Create machine images for multiple platforms with a single custom config
+
   
 # Machine Delopyment
 
@@ -393,7 +400,161 @@ $ vagrant ssh
 - PACKAGE.BOX - box information file
 
 ## Packer 
+- Create machine images for multiple platforms with a single custom config
+- Runs on all OS
+- Create multiple images for multiple platforms in parallel 
+- Works in parallel with shell scripts/Pupper/Chef (does not replace config mgmt tool)
+- Don't make changes to a server, you must replace it
 
+
+### Packer Templates
+- Template are in JSON
+- Template structure (array):
+  - builders = what are we defining
+  - description = what the template does
+  - min_packer_version = optional
+  - post-processors = what actions to take next (tagging or publishing to a repo)
+  - provisioners = how are we going to configure the machine image
+  - variables = pass in at run time of packer build
+
+```bash
+$ packer build
+# bring a template up to date
+$ packer fix
+# learn what the template is doing (vars, definitions, etc)
+$ packer inspect
+# check syntax and config
+$ packer validate
+```
+
+- Example builders: Amazon AMI, Azure, Docker, HyperV, OpenStack, VirtualBox, VMware
+- Example provisioners: 
+  - Ansible (Ansible local or Ansible remote = tranditional via SSH)
+  - Chef (Chef Solo = locally)
+  - File = upload files
+  - PowerShell for Windows
+  - Pupper (Pupper Master Server)
+  - Shell = use shell command or scripts
+- Post-processors:
+  - Amazon Import = used to import to amazon and create an AMI
+  - Checksum = post processor
+  - Docker Push = Push to remote repo
+  - Docker Tag 
+  - Google Compute Image Exporter = create a tabball and upload to GC Storage
+  - Shell = can execute shell scripts or inline
+  - Vagrant
+  - vSphere
+
+### Install Packer
+
+```bash
+$ cd /usr/local/bin
+$ wget <packer zip file>
+$ yum install unzip
+$ unzip <packer zip file>
+$ rm <packer zip file>
+$ cd
+$ packer --version
+```
+
+### Create a Packer Template
+
+```bash
+$ mkdir packer
+$ nano packer.json
+
+{
+  "variables": {
+    "repository": "la/expresS",
+    "tag": "0.1.0"
+  },
+  "builders": [
+    { "type": "docker",
+      "author": "<your name>",
+      "image": "node",
+      "commit": "true",
+      "changes": [
+        "EXPOSE 3000"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt update && apt install curl -y",
+        "mkdir -p /var/code",
+        "cd /root",
+        "curl -L https://github.com/linuxacademy/content-nodejs-hello-world/archive/v1.0.tar.gz -o code.tar.gz",
+        "tar zxvf code.tar.gz -C /var/code --strip-components=1"
+        "cd /var/code",
+        "npm install"
+        ]
+    }
+  ],
+  "post-processor": [
+    {
+    "type": "docker-tag",
+    "repository": "{{user `repository`}}",
+    "tag": "{{user `tag`}}"
+    }
+  ]
+}
+
+$ packer validate
+# fix errors
+$ packer build -var 'tag=0.0.1' packer.json
+$ docker images
+# you will see any docker images from the past and this one
+$ docker run -dt -p 80:3000 la/express:0.0.1 node /var/code/bin/www
+$ docker ps
+# you should see the docker image running
+```
+
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-21%20at%2010.40.22%20PM.jpg?raw=true)
+
+### Cloud Init
+- Python scripts & Utils to handle early init of cloud instances such as:
+  - setting a default locale, an instance hostname
+  - generating instance ssh private keys && adding to ~/.ssh/authorized_keys
+  - set ephemeral mount points
+  - configuring network devices
+- Comes installed on: Ubuntu Cloud Images, Fedore, Devial, RHEL, CentOS  
+  
+```bash
+$ cloud-init init = run by the OS but can be run on the CLI
+$ cloud-init modules = activates modules using a config key
+$ cloud-init single 
+$ cloud-init dhclient-hook
+$ cloud-init features = not always installed
+$ cloud-init analyze = cloud-init logs and data
+$ cloud-init devel = run the dev tools
+$ cloud-init collect-logs = collect and tar debug info
+$ cloud-init clean = remove logs and artifacts so cloud-init can re-run
+$ cloud-init status = reports cloud-init status or wait on completion
+```
+
+- cloud-init works in 2 Formats: 
+  1. GZIP, 
+  2. mime multi-part archive
+- script types  
+  - User Data Script
+  - Include Files
+  - Cloud config data
+  - Upstart job = content in /etc/init
+  - Cloud Boothook = content in /var/lib/cloud
+  - Part handler = custom code
+- Example:
+```bash
+#!/bin/sh
+echo "Hello World. The time is now $(date -R)!" | tee /root/output.txt
+```
+- See cloud-init modules: https://cloudinit.readthedocs.io/en/latest/topics/modules.html
+
+### Using Packer to Create an AMI
+
+
+### Using Packer to Create a Docker Image
 
 
 # Configuration Management
