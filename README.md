@@ -5,6 +5,8 @@
 ## TOC
   - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
   - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
+    - Using Packer to Create an AMI
+    - Using Packer to Create a Docker Image
   - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
@@ -550,7 +552,74 @@ echo "Hello World. The time is now $(date -R)!" | tee /root/output.txt
 - See cloud-init modules: https://cloudinit.readthedocs.io/en/latest/topics/modules.html
 
 ### Using Packer to Create an AMI
+- Use Cloud9 to create a Packer File that will create an AMI
 
+- Install Packer on Cloud9 Server
+  - AWS Console search Cloud9, Open IDE
+  - Use the GUI console interface
+  - Goto packer.io, Download, Copy the link
+```bash
+$ sudo su
+$ cd /usr/local/bin
+$ wget <packer.io link>
+$ unzip pack*.zip
+$ rm packer*.zip
+$ exit
+# packer --version
+```
+
+- Cloud9 GUI: File: Net File: packer.json
+```json
+{
+  "variables": {
+    "instance_size": "t2.small",
+    "ami_name": "ami-make1up",
+    "base_ami": "ami-from-AWS",
+    "ssh_username": "ec2-user",
+    "vpc_id": "",
+    "subnet_id": ""
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "source_ami": "{{user `base_ami`}}",
+      "instance_type": "{{user `instance_size`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_timeout": "20m",
+      "ami_name": "{{user `ami_name`}}",
+      "ssh_pty": "true",
+      "vpc_id": "{{user `vpc_id`}}",
+      "subnet_id": "{{user `subnet_id`}}",
+      "tags": {
+        "Name": "App Name",
+        "BuiltBy": "Packer"
+      }
+    }
+  ],
+  "description": "AWS image",
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo yum update -y",
+        "sudo yum install -y git"
+      ]
+    }
+  ]
+} 
+```
+
+- In GUI prompt
+```bash
+$ packer validate
+$ packer build -var 'ami_name=ami-make1up' -var 'base_ami=ami-1853ac65' -var 'vpc_id=' -var 'subnet_id=' packer.json
+  ```
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.36.49%20PM.jpg?raw=true)
+
+- Copy AMI-ID & Verify in EC2
+
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.40.26%20PM.jpg?raw=true)
 
 ### Using Packer to Create a Docker Image
 
