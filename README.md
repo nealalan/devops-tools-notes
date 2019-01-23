@@ -6,7 +6,6 @@
   - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
   - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
     - Using Packer to Create an AMI
-    - Using Packer to Create a Docker Image
   - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
@@ -465,7 +464,7 @@ $ nano packer.json
 
 {
   "variables": {
-    "repository": "la/expresS",
+    "repository": "la/express",
     "tag": "0.1.0"
   },
   "builders": [
@@ -621,7 +620,6 @@ $ packer build -var 'ami_name=ami-make1up' -var 'base_ami=ami-1853ac65' -var 'vp
 
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.40.26%20PM.jpg?raw=true)
 
-### Using Packer to Create a Docker Image
 
 
 # Configuration Management
