@@ -656,6 +656,17 @@ $ packer build -var 'ami_name=ami-make1up' -var 'base_ami=ami-1853ac65' -var 'vp
 
 ## Prod Concepts
 
+# Pen Testing
+
+## [Metasploit](https://www.metasploit.com/download)
+
+- Pro versus Community - all the capabilities, not as pretty
+  - https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers
+- Possible to get using `$ vagrant up`
+
+
+
+
 
 
 [[EDIT](https://github.com/nealalan/devops-tools-notes/edit/master/README.md)]
