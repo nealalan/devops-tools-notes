@@ -485,13 +485,13 @@ $ nano packer.json
         "mkdir -p /var/code",
         "cd /root",
         "curl -L https://github.com/linuxacademy/content-nodejs-hello-world/archive/v1.0.tar.gz -o code.tar.gz",
-        "tar zxvf code.tar.gz -C /var/code --strip-components=1"
+        "tar zxvf code.tar.gz -C /var/code --strip-components=1",
         "cd /var/code",
         "npm install"
         ]
     }
   ],
-  "post-processor": [
+  "post-processors": [
     {
     "type": "docker-tag",
     "repository": "{{user `repository`}}",
@@ -621,6 +621,97 @@ $ packer build -var 'ami_name=ami-make1up' -var 'base_ami=ami-1853ac65' -var 'vp
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.40.26%20PM.jpg?raw=true)
 
 
+### Using Packer to Create a Docker Image
+
+1. In the root directory (of an instance), create a packerfile.json with the following contents:
+
+```bash
+$ sudo su -
+```
+
+  - Create a variable called repository, the default values should be la/express.
+  - Create a variable called tag; the default values should be 1.0. 
+  - It should use the Docker builder.
+  - The type should be docker.
+  - Set the author to use your name.
+  - Use the node image.
+  - Set commit to true.
+  - In the changes setting, expose port 3000.
+  - Create an inline shell provisioner. The provisioner will need to execute an apt-get update and install curl:
+
+2. Create a directory call code in /var.
+  - Use curl to download the application tar file to root: curl -L https://github.com/linuxacademy/content-nodejs-hello-world/archive/v1.0.tar.gz -o code.tar.gz
+  - Untar the file to /var/code. tar zxvf code.tar.gz -C /var/code --strip-components=1
+  - Go to /var/code and execute an npm install.
+  
+3. Create a docker-tag post-processor:
+  - Set repository to use the repository variable.
+  - Set tag to use the tag variable.
+
+```bash
+
+$ echo '{
+  "variables": {
+    "repository": "la/express",
+    "tag": "0.1.0"
+  },
+  "builders": [
+    { "type": "docker",
+      "author": "<your name>",
+      "image": "node",
+      "commit": "true",
+      "changes": [
+        "EXPOSE 3000"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt update && apt install curl -y",
+        "mkdir -p /var/code",
+        "cd /root",
+        "curl -L https://github.com/linuxacademy/content-nodejs-hello-world/archive/v1.0.tar.gz -o code.tar.gz",
+        "tar zxvf code.tar.gz -C /var/code --strip-components=1",
+        "cd /var/code",
+        "npm install"
+        ]
+    }
+  ],
+  "post-processors": [
+    {
+    "type": "docker-tag",
+    "repository": "{{user `repository`}}",
+    "tag": "{{user `tag`}}"
+    }
+  ]
+}' > packerfile.json
+
+```
+
+4. Validate the packerfile.json.
+
+```bash
+$ packer validate packerfile.json
+```
+
+5. Build the docker image by Executing packer build.
+
+```bash
+$ packer build --var 'repository=la/express' --var 'tag=0.0.1' packerfile.json
+# show the images that exist
+$ docker images
+```
+
+6. Start a Docker container by executing: 
+
+```bash
+$ docker run -dt -p 80:3000 la/express:0.0.1 node /var/code/bin/www
+# validate running
+$ docker ps
+$ curl localhost
+```
 
 # Configuration Management
 
