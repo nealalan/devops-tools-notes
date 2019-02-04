@@ -727,23 +727,22 @@ $ curl localhost
 
 ## Deploying to AWS with Ansible and Terraform
 
-![]()
-
-- Will create 
-  - a Private Hosted Zone which will have a CNAME to a database
-  - a Public Hosted Zone with a domain dev.domain to an EC2 bastion host and a www.domain with alias to ELB
-  - a wp_vpc (wordpress) with many subnets
-    - 2 public subnets for high available web servers
-    - 2 private subnets for EC2 instances with webservers the load balancer will pull from
-    - 3 private subnets for RDS databasers
-    - 2 route tables for public and private
-    - 1 IGW
-    - 4 SGs 
-      - Private = All traffic, Source VPC IP Address
-      - Public = port 80, Source 0.0.0.0/0
-      - Dev = port 80 & 22, Source myIP
-      - RDS = port 3306, Source Other Security Groups in VPC    
-    - 1 S3 Private Endpoint so autoscaling instances can access Code Bucket repos without access to the internet
+### Requirements
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%201.57.48%20PM.jpg?raw=true)
+- a Private Hosted Zone which will have a CNAME to a database
+- a Public Hosted Zone with a domain dev.domain to an EC2 bastion host and a www.domain with alias to ELB
+- a wp_vpc (wordpress) with many subnets
+  - 2 public subnets for high available web servers
+  - 2 private subnets for EC2 instances with webservers the load balancer will pull from
+  - 3 private subnets for RDS databasers
+  - 2 route tables for public and private
+  - 1 IGW
+  - 4 SGs 
+    - Private = All traffic, Source VPC IP Address
+    - Public = port 80, Source 0.0.0.0/0
+    - Dev = port 80 & 22, Source myIP
+    - RDS = port 3306, Source Other Security Groups in VPC    
+  - 1 S3 Private Endpoint so autoscaling instances can access Code Bucket repos without access to the internet
     
 
 
