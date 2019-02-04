@@ -727,7 +727,7 @@ $ curl localhost
 
 ## Deploying to AWS with Ansible and Terraform
 
-#### Requirements
+### Requirements
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%202.39.47%20PM.jpg?raw=true)
 - a Private Hosted Zone which will have a CNAME to a database
 - a Public Hosted Zone with a domain dev.domain to an EC2 bastion host and a www.domain with alias to ELB
@@ -744,14 +744,14 @@ $ curl localhost
     - RDS = port 3306, Source Other Security Groups in VPC    
   - 1 S3 Private Endpoint so autoscaling instances can access Code Bucket repos without access to the internet
 
-#### Budgeting
+### Budgeting
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%202.37.23%20PM.jpg?raw=true)
 - Setup Billing: Budgets: Create Budget, set name, period, start and end date, budgeted amt, 
 - THIS WILL ONLY NOTIFY YOU, NOT STOP ANYTHING
 - Set Notifications!!!
 - Note: When you run `$ terraform destroy' make sure it destroys the same number of resources that you created
 
-#### Process Flow
+### Process Flow
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%202.45.17%20PM.jpg?raw=true)
 - Dev server is created with WP
 - Golden AMI is created to be used with launch configuration that deploys to autoscaling group
@@ -760,7 +760,7 @@ $ curl localhost
 - Script on the autoscaling instances pulls from the code bucket (set intervual) 
 - All servers are able to access the private zone domain db.domain
 
-#### Setup Process Overview
+### Setup Process Overview
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%203.03.06%20PM.jpg?raw=true)
 - Terraform will have admin priv in IAM
 - Terraform builds the entire environment 
