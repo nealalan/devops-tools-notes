@@ -5,7 +5,7 @@
 ## TOC
   - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
   - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
-    - Using Packer to Create an AMI
+    - [Using Packer to Create an AWS AMI](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#using-packer-to-create-an-ami)
     - [Using Packer to Create and run a Docker Image](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#using-packer-to-create-a-docker-image)
   - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
