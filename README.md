@@ -728,7 +728,7 @@ $ curl localhost
 ## Deploying to AWS with Ansible and Terraform
 
 ### Requirements
-![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%201.57.48%20PM.jpg?raw=true)
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%202.39.47%20PM.jpg?raw=true)
 - a Private Hosted Zone which will have a CNAME to a database
 - a Public Hosted Zone with a domain dev.domain to an EC2 bastion host and a www.domain with alias to ELB
 - a wp_vpc (wordpress) with many subnets
@@ -743,7 +743,15 @@ $ curl localhost
     - Dev = port 80 & 22, Source myIP
     - RDS = port 3306, Source Other Security Groups in VPC    
   - 1 S3 Private Endpoint so autoscaling instances can access Code Bucket repos without access to the internet
-    
+
+### Budgeting
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%202.37.23%20PM.jpg?raw=true)
+- Setup Billing: Budgets: Create Budget, set name, period, start and end date, budgeted amt, 
+- THIS WILL ONLY NOTIFY YOU, NOT STOP ANYTHING
+- Set Notifications!!!
+- Note: When you run `$ terraform destroy' make sure it destroys the same number of resources that you created
+
+
 
 
 # Container Management 
