@@ -10,6 +10,7 @@
   - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
+  - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform]()
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
   - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
   - SW Eng - [Methodologies](https://nealalan.github.io/devops-tools-notes/#methodologies)
@@ -723,6 +724,27 @@ $ curl localhost
 
 
 ## Ansible
+
+## Deploying to AWS with Ansible and Terraform
+
+![]()
+
+- Will create 
+  - a Private Hosted Zone which will have a CNAME to a database
+  - a Public Hosted Zone with a domain dev.domain to an EC2 bastion host and a www.domain with alias to ELB
+  - a wp_vpc (wordpress) with many subnets
+    - 2 public subnets for high available web servers
+    - 2 private subnets for EC2 instances with webservers the load balancer will pull from
+    - 3 private subnets for RDS databasers
+    - 2 route tables for public and private
+    - 1 IGW
+    - 4 SGs 
+      - Private = All traffic, Source VPC IP Address
+      - Public = port 80, Source 0.0.0.0/0
+      - Dev = port 80 & 22, Source myIP
+      - RDS = port 3306, Source Other Security Groups in VPC    
+    - 1 S3 Private Endpoint so autoscaling instances can access Code Bucket repos without access to the internet
+    
 
 
 # Container Management 
