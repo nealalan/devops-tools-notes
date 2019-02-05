@@ -10,7 +10,7 @@
   - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
   - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
   - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
-  - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform]()
+  - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#deploying-to-aws-with-ansible-and-terraform)
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
   - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
   - SW Eng - [Methodologies](https://nealalan.github.io/devops-tools-notes/#methodologies)
@@ -773,7 +773,7 @@ $ curl localhost
 - Autoscaling Group will pull the code from Code Bucket to connect to the db
 - Traffic to www.domain will now go to ELB to access the webserver that access the db
 
-### Deploying to AWS with Ansible and Terraform: Setup
+### Deploying to AWS with Ansible and Terraform: Setup Server
 - Create a Ubuntu EC2 instance
 ```bash
 $ sudo su -
@@ -839,7 +839,50 @@ $ mkdir terransible
 $ cd terransible
 ```
 
+### Deploying to AWS with Ansible and Terraform: Setup AWS IAM and DNS
+- Setup what can't be setup with terraform 
+- IAM: Add User: terransible; Programatic Access; Policy: Administrator Access; Create User; Download Credentials
+- Route 53
+  - Have a domain purchased. If you use a different Registrar you will need to do a few extras
+- Log into server and setup creds 
+  - Recommended creating profile 
 
+```bash
+$ sudo su - 
+$ aws configure --profile terransible_lab
+$ aws ec2 describe-instances --profile terransible_lab
+# NOTE: may not have any instances listed
+```
+
+- Gather information for domain and create a Route53 Reusable Delegation Set
+  - Copy, paste and same this to a local file
+```bash
+$ aws route53 create-reusable-delegation-set --caller-reference 1234 --profile terransible_lab
+$ nano route53.nfo
+> paste delegation set in
+```
+- Add delegation set to Route53
+- Add/Edit Nameservers; Update
+
+### Deploying to AWS with Ansible and Terraform: Setup Credentials and Variables
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%206.40.12%20PM.jpg?raw=true)
+- Create files (two tf files for variables.
+  - NOTE: make sure you add \*.tfvars to .gitignore
+```bash
+$ cd /home/user/terransible
+$ touch main.tf terraform.tfvars variables.tf
+$ touch userdata aws_hosts wordpress.yml s3update.yml
+$ echo "provider "aws" {
+  region = "${var.aws_region}"
+  profile = "${var.aws_profile}"
+}" > main.tf
+$ echo "variable "aws_region" {}
+variable "aws_profile" {}" > variables.tf
+$ echo "aws_profile = "terransible_lab
+aws_region = "us-east-1"" > terraform.tfvars
+```
+
+### Deploying to AWS with Ansible and Terraform: Setup Credentials and Variables
 
 # Container Management 
 
