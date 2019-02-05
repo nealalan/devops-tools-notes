@@ -883,6 +883,10 @@ aws_region = "us-east-1"" > terraform.tfvars
 ```
 
 ### Deploying to AWS with Ansible and Terraform: Terraform Files
+- [main.tf](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#maintf)
+- [variables.tf](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#variablestf)
+- [terraform.tfvars](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#terraformtfvars)
+
 ```bash
 $ terraform init
 $ terraform plan
@@ -890,24 +894,25 @@ $ terraform plan
 
 ### main.tf
 ```yml
+#######################################################################################
+# TERRAFORM PROVIDER = AWS
+#######################################################################################
 provider "aws" {
   region  = "${var.aws_region}"
   profile = "${var.aws_profile}"
 }
 
-#data "aws_availability_zones" "available" {}
-
-#------------IAM---------------- 
-# S3_access
+#######################################################################################
+# IDENTITY & ACCESS MANAGEMENT / IAM
+# - Create S3 Access - PROFILE, POLICY, ROLE
+#######################################################################################
 resource "aws_iam_instance_profile" "s3_access_profile" {
   name = "s3_access"
   role = "${aws_iam_role.s3_access_role.name}"
 }
-
 resource "aws_iam_role_policy" "s3_access_policy" {
   name = "s3_access_policy"
   role = "${aws_iam_role.s3_access_role.id}"
-
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -921,10 +926,8 @@ resource "aws_iam_role_policy" "s3_access_policy" {
 }
 EOF
 }
-
 resource "aws_iam_role" "s3_access_role" {
   name = "s3_access_role"
-
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -941,9 +944,9 @@ resource "aws_iam_role" "s3_access_role" {
 }
 EOF
 }
-
-#-------------VPC-----------
-
+#######################################################################################
+# VIRTUAL PRIVATE CLOUD / VPC
+#######################################################################################
 resource "aws_vpc" "wp_vpc" {
   cidr_block           = "${var.vpc_cidr}"
   enable_dns_hostnames = true
@@ -953,50 +956,55 @@ resource "aws_vpc" "wp_vpc" {
     Name = "wp_vpc"
   }
 }
-
-#internet gateway
-
+#######################################################################################
+# VPC INTERNET GATEWAY / IGW - give the VPC a route to the internet
+#######################################################################################
 resource "aws_internet_gateway" "wp_internet_gateway" {
   vpc_id = "${aws_vpc.wp_vpc.id}"
-
   tags {
     Name = "wp_igw"
   }
 }
-# Route tables
-
+#######################################################################################
+# VPC ROUTE TABLE - PUBLIC ROUTE TABLE
+#  - route everything through the IGW
+#######################################################################################
 resource "aws_route_table" "wp_public_rt" {
   vpc_id = "${aws_vpc.wp_vpc.id}"
-
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = "${aws_internet_gateway.wp_internet_gateway.id}"
   }
-
   tags {
     Name = "wp_public"
   }
 }
-
+#######################################################################################
+# VPC ROUTE TABLE - PRIVATE ROUTE TABLE
+#######################################################################################
 resource "aws_default_route_table" "wp_private_rt" {
   default_route_table_id = "${aws_vpc.wp_vpc.default_route_table_id}"
-
   tags {
     Name = "wp_private"
   }
 }
-
+#######################################################################################
+# VPC SUBNETS
+# - create all subnets and set the subnet CIDRs from variables created
+#   in variables.tf and declared in terraform.tfvars
+# - Subnets: public1, public2, private1, private2, rds1, rds2, rds3
+# - data.aws_availability_zones.available.names[0] = an array of AZs we will reference
+# - Note: Potential to optimize using "count"
+#######################################################################################
 resource "aws_subnet" "wp_public1_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["public1"]}"
   map_public_ip_on_launch = true
   availability_zone       = "${data.aws_availability_zones.available.names[0]}"
-
   tags {
     Name = "wp_public1"
   }
 }
-
 resource "aws_subnet" "wp_public2_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["public2"]}"
@@ -1007,7 +1015,6 @@ resource "aws_subnet" "wp_public2_subnet" {
     Name = "wp_public2"
   }
 }
-
 resource "aws_subnet" "wp_private1_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["private1"]}"
@@ -1018,7 +1025,6 @@ resource "aws_subnet" "wp_private1_subnet" {
     Name = "wp_private1"
   }
 }
-
 resource "aws_subnet" "wp_private2_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["private2"]}"
@@ -1029,65 +1035,37 @@ resource "aws_subnet" "wp_private2_subnet" {
     Name = "wp_private2"
   }
 }
-
-#create S3 VPC endpoint
-resource "aws_vpc_endpoint" "wp_private-s3_endpoint" {
-  vpc_id       = "${aws_vpc.wp_vpc.id}"
-  service_name = "com.amazonaws.${var.aws_region}.s3"
-
-  route_table_ids = ["${aws_vpc.wp_vpc.main_route_table_id}",
-    "${aws_route_table.wp_public_rt.id}",
-  ]
-
-  policy = <<POLICY
-{
-    "Statement": [
-        {
-            "Action": "*",
-            "Effect": "Allow",
-            "Resource": "*",
-            "Principal": "*"
-        }
-    ]
-}
-POLICY
-}
-
 resource "aws_subnet" "wp_rds1_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["rds1"]}"
   map_public_ip_on_launch = false
   availability_zone       = "${data.aws_availability_zones.available.names[0]}"
-
   tags {
     Name = "wp_rds1"
   }
 }
-
 resource "aws_subnet" "wp_rds2_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["rds2"]}"
   map_public_ip_on_launch = false
   availability_zone       = "${data.aws_availability_zones.available.names[1]}"
-
   tags {
     Name = "wp_rds2"
   }
 }
-
 resource "aws_subnet" "wp_rds3_subnet" {
   vpc_id                  = "${aws_vpc.wp_vpc.id}"
   cidr_block              = "${var.cidrs["rds3"]}"
   map_public_ip_on_launch = false
   availability_zone       = "${data.aws_availability_zones.available.names[2]}"
-
   tags {
     Name = "wp_rds3"
   }
 }
-
-# Subnet Associations
-
+#######################################################################################
+# VPC ROUTE TABLE <-> SUBNET ASSOCIATIONS 
+# - Note: Potential to optimize using "count"
+#######################################################################################
 resource "aws_route_table_association" "wp_public_assoc" {
   subnet_id      = "${aws_subnet.wp_public1_subnet.id}"
   route_table_id = "${aws_route_table.wp_public_rt.id}"
@@ -1107,38 +1085,37 @@ resource "aws_route_table_association" "wp_private2_assoc" {
   subnet_id      = "${aws_subnet.wp_private2_subnet.id}"
   route_table_id = "${aws_default_route_table.wp_private_rt.id}"
 }
-
+#######################################################################################
+# RDS SUBNET GROUP 
+# - for RDS instances across 3 difference subnet groups
+#######################################################################################
 resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
   name = "wp_rds_subnetgroup"
-
-  subnet_ids = ["${aws_subnet.wp_rds1_subnet.id}",
+  subnet_ids = [
+    "${aws_subnet.wp_rds1_subnet.id}",
     "${aws_subnet.wp_rds2_subnet.id}",
     "${aws_subnet.wp_rds3_subnet.id}",
   ]
-
   tags {
     Name = "wp_rds_sng"
   }
 }
-
-#Security groups
-
+#######################################################################################
+# SECURITY GROUP / SG - DEV SG
+# - INBOUND: SSH ACCESS FOR localip variable (CIDR range)
+#            HTTP ACCESS FOR localip variable (CIDR range)
+# - OUTBOUND: ALL ACCESS TO INTERNET
+#######################################################################################
 resource "aws_security_group" "wp_dev_sg" {
   name        = "wp_dev_sg"
   description = "Used for access to the dev instance"
-  vpc_id      = "${aws_vpc.wp_vpc.id}"
-
-  #SSH
-
+  vpc_id      = "${aws_vpc.wp_vpc.id}
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["${var.localip}"]
   }
-
-  #HTTP
-
   ingress {
     from_port   = 80
     to_port     = 80
@@ -1152,25 +1129,22 @@ resource "aws_security_group" "wp_dev_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-#Public Security group
-
+#######################################################################################
+# SECURITY GROUP / SG - PUBLIC SG
+# - Provides access to Elastic Load Balancer
+# - INBOUND: HTTP ACCESS FOR INTERNET
+# - OUTBOUND: ALL ACCESS TO INTERNET
+#######################################################################################
 resource "aws_security_group" "wp_public_sg" {
   name        = "wp_public_sg"
   description = "Used for public and private instances for load balancer access"
   vpc_id      = "${aws_vpc.wp_vpc.id}"
-
-  #HTTP 
-
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  #Outbound internet access
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -1178,9 +1152,11 @@ resource "aws_security_group" "wp_public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-#Private Security Group
-
+#######################################################################################
+# SECURITY GROUP / SG - PRIVATE SG
+# - INBOUND: ALL ACCESS FOR VPC ONLY
+# - OUTBOUND: ALL ACCESS TO INTERNET (particularly for S3 endpoint)
+#######################################################################################
 resource "aws_security_group" "wp_private_sg" {
   name        = "wp_private_sg"
   description = "Used for private instances"
@@ -1201,45 +1177,74 @@ resource "aws_security_group" "wp_private_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-#RDS Security Group
+#######################################################################################
+# SECURITY GROUP / SG - RDS SG
+# - INBOUND: SQL ACCESS FROM dev_sg, public_sg & private_sg
+# - OUTBOUND: NONE (resources will only have access within the same subnet)
+#######################################################################################
 resource "aws_security_group" "wp_rds_sg" {
   name        = "wp_rds_sg"
   description = "Used for DB instances"
   vpc_id      = "${aws_vpc.wp_vpc.id}"
-
-  # SQL access from public/private security group
-
   ingress {
     from_port = 3306
     to_port   = 3306
     protocol  = "tcp"
-
-    security_groups = ["${aws_security_group.wp_dev_sg.id}",
+    security_groups = [
+      "${aws_security_group.wp_dev_sg.id}",
       "${aws_security_group.wp_public_sg.id}",
       "${aws_security_group.wp_private_sg.id}",
     ]
   }
 }
 
-#S3 code bucket
+#######################################################################################
+# VPC ENDPOINT FOR S3 
+# - setting so both private and public instances can access
+#######################################################################################
+resource "aws_vpc_endpoint" "wp_private-s3_endpoint" {
+  vpc_id       = "${aws_vpc.wp_vpc.id}"
+  service_name = "com.amazonaws.${var.aws_region}.s3"
+  route_table_ids = [
+    "${aws_vpc.wp_vpc.main_route_table_id}",
+    "${aws_route_table.wp_public_rt.id}",
+  ]
 
+  policy = <<POLICY
+{
+    "Statement": [
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": "*",
+            "Principal": "*"
+        }
+    ]
+}
+POLICY
+}
+#######################################################################################
+# S3 code bucket
+# - create a 6 digit ID (2 bytes) to the name of the S3 bucket to ensure it's unique
+# - bucket is only private
+# - force_destroy tells AWS to ignore the destruction prevention
+#######################################################################################
 resource "random_id" "wp_code_bucket" {
   byte_length = 2
 }
-
 resource "aws_s3_bucket" "code" {
   bucket        = "${var.domain_name}-${random_id.wp_code_bucket.dec}"
   acl           = "private"
   force_destroy = true
-
   tags {
     Name = "code bucket"
   }
 }
-
-#---------compute-----------
-
+#######################################################################################
+# COMPUTE - RDS DB INSTANCE - MYSQL
+# - 10GB
+# - A bunch of variables are declared in variables.tf and set in terraform.tfvars
+#######################################################################################
 resource "aws_db_instance" "wp_db" {
   allocated_storage      = 10
   engine                 = "mysql"
@@ -1252,15 +1257,15 @@ resource "aws_db_instance" "wp_db" {
   vpc_security_group_ids = ["${aws_security_group.wp_rds_sg.id}"]
   skip_final_snapshot    = true
 }
-
-#key pair
-
+#######################################################################################
+# COMPUTE - key pair
+#######################################################################################
 resource "aws_key_pair" "wp_auth" {
   key_name   = "${var.key_name}"
   public_key = "${file(var.public_key_path)}"
 }
 
-#dev server
+# COMPUTE - dev server
 
 resource "aws_instance" "wp_dev" {
   instance_type = "${var.dev_instance_type}"
@@ -1291,25 +1296,22 @@ EOD
     command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.wp_dev.id} --profile superhero && ansible-playbook -i aws_hosts wordpress.yml"
   }
 }
-
-#load balancer
-
+#######################################################################################
+# ELASTIC LOAD BALANCER / ELB
+# - Declare the subnets the ELB can server traffic to
+#######################################################################################
 resource "aws_elb" "wp_elb" {
   name = "${var.domain_name}-elb"
-
   subnets = ["${aws_subnet.wp_public1_subnet.id}",
     "${aws_subnet.wp_public2_subnet.id}",
   ]
-
   security_groups = ["${aws_security_group.wp_public_sg.id}"]
-
   listener {
     instance_port     = 80
     instance_protocol = "http"
     lb_port           = 80
     lb_protocol       = "http"
   }
-
   health_check {
     healthy_threshold   = "${var.elb_healthy_threshold}"
     unhealthy_threshold = "${var.elb_unhealthy_threshold}"
@@ -1317,12 +1319,10 @@ resource "aws_elb" "wp_elb" {
     target              = "TCP:80"
     interval            = "${var.elb_interval}"
   }
-
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
   connection_draining_timeout = 400
-
   tags {
     Name = "wp_${var.domain_name}-elb"
   }
@@ -1454,14 +1454,13 @@ resource "aws_route53_record" "db" {
 ```yml
 variable "aws_region" {}
 variable "aws_profile" {}
+# pull available AZs from AWS
 data "aws_availability_zones" "available" {}
 variable "localip" {}
 variable "vpc_cidr" {}
-
 variable "cidrs" {
   type = "map"
 }
-
 variable "db_instance_class" {}
 variable "dbname" {}
 variable "dbuser" {}
@@ -1501,9 +1500,9 @@ cidrs			= {
   rds3     = "10.0.7.0/24"
 }
 db_instance_class	= "db.t2.micro"
-dbname			= "superherodb"
-dbuser			= "superhero"
-dbpassword		= "superheropass"
+dbname			= "terransible_lab_db"
+dbuser			= "terransible_lab"
+dbpassword		= "terransible_lab_pass"
 key_name		= "kryptonite"
 public_key_path		= "/root/.ssh/kryptonite.pub"
 domain_name		= "bravethecloud"
@@ -1521,6 +1520,11 @@ asg_cap			= "2"
 lc_instance_type	= "t2.micro"
 delegation_set 		= "N1HDAZB52OQ3IV"
 test = {}
+```
+#### Cleanup and check terraform
+```bash
+$ terraform plan
+$ terraform fmt --diff
 ```
 
 # Container Management 
