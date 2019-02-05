@@ -1265,6 +1265,8 @@ resource "aws_key_pair" "wp_auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
+#######################################################################################
+
 # COMPUTE - dev server
 
 resource "aws_instance" "wp_dev" {
@@ -1299,6 +1301,8 @@ EOD
 #######################################################################################
 # ELASTIC LOAD BALANCER / ELB
 # - Declare the subnets the ELB can server traffic to
+# - Target TCP:80 instead of HTTP:80 because WP sometimes uses 301s instead of 200s
+# - cross_zone_load_bal = Spread requests between instances instead of between subnets
 #######################################################################################
 resource "aws_elb" "wp_elb" {
   name = "${var.domain_name}-elb"
@@ -1328,6 +1332,8 @@ resource "aws_elb" "wp_elb" {
   }
 }
 
+#######################################################################################
+
 #AMI 
 
 resource "random_id" "golden_ami" {
@@ -1350,6 +1356,8 @@ EOT
   }
 }
 
+#######################################################################################
+
 #launch configuration
 
 resource "aws_launch_configuration" "wp_lc" {
@@ -1365,6 +1373,8 @@ resource "aws_launch_configuration" "wp_lc" {
     create_before_destroy = true
   }
 }
+
+#######################################################################################
 
 #ASG 
 
@@ -1398,6 +1408,8 @@ resource "aws_autoscaling_group" "wp_asg" {
     create_before_destroy = true
   }
 }
+
+#######################################################################################
 
 #---------Route53-------------
 
@@ -1505,9 +1517,10 @@ dbuser			= "terransible_lab"
 dbpassword		= "terransible_lab_pass"
 key_name		= "kryptonite"
 public_key_path		= "/root/.ssh/kryptonite.pub"
-domain_name		= "bravethecloud"
+domain_name		= "terransible_lab"
 dev_instance_type	= "t2.micro"
 dev_ami			= "ami-b73b63a0"
+# set as low as possible
 elb_healthy_threshold   = "2"
 elb_unhealthy_threshold = "2"
 elb_timeout 		= "3"
@@ -1518,7 +1531,7 @@ asg_grace		= "300"
 asg_hct			= "EC2"
 asg_cap			= "2"
 lc_instance_type	= "t2.micro"
-delegation_set 		= "N1HDAZB52OQ3IV"
+delegation_set 		= ".... from route53 ..."
 test = {}
 ```
 #### Cleanup and check terraform
