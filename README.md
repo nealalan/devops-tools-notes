@@ -878,7 +878,7 @@ $ echo "provider "aws" {
 }" > main.tf
 $ echo "variable "aws_region" {}
 variable "aws_profile" {}" > variables.tf
-$ echo "aws_profile = "terransible_lab
+$ echo "aws_profile = "terransible_lab"
 aws_region = "us-east-1"" > terraform.tfvars
 ```
 
