@@ -773,6 +773,71 @@ $ curl localhost
 - Autoscaling Group will pull the code from Code Bucket to connect to the db
 - Traffic to www.domain will now go to ELB to access the webserver that access the db
 
+### Deploying to AWS with Ansible and Terraform: Setup
+- Create a Ubuntu EC2 instance
+```bash
+$ sudo su -
+$ python --version
+$ apt update
+$ apt install python-pip
+$ pip install --upgrade pip
+```
+
+- Download terraform (can find the newest on the hashicorp site)
+```bash
+$ curl -O https://releases.hashicorp.com/terraform/0.11.2/terraform_0.11.2_linux_amd64.zip
+$ mkdir /bin/terraform
+$ unzip terraform* -d /bin/terraform
+$ ls /bin/terraform
+```
+
+- Add terraform to the system path
+```bash
+$ terraform --version
+# NOTE: Can't be found because not in the path
+$ export PATH=$PATH:/bin/terraform
+$ terraform --version
+```
+
+- Install AWS CLI
+```bash
+$ pip install awscli --upgrade
+$ aws --version
+$ apt update
+```
+
+- Install Ansible
+```bash
+$ apt install software-properties-common
+# probably already installed
+$ apt-add-repository ppa:ansible/ansible
+$ apt udpate
+$ apt install ansible
+$ ansible --version
+```
+
+- Generate key to access server and add identity to ssh agent (MAY NEED TO RUN THIS AT EVERY LOGIN)
+```bash
+$ ssh-keygen
+> /root/.ssh/kryptonite
+$ ssh-agent bash
+$ ssh-add ~/.ssh/kryptonite
+$ ssh-add -l
+```
+
+- Modify Ansible Config
+```bash
+$ apt install nano
+$ nano /etc/ansible/ansible.cfg
+# DISABLE:
+> host_key_checking = false
+```
+
+- Create working directory
+```bash
+$ mkdir terransible
+$ cd terransible
+```
 
 
 
