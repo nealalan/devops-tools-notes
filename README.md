@@ -882,7 +882,25 @@ $ echo "aws_profile = "terransible_lab"
 aws_region = "us-east-1"" > terraform.tfvars
 ```
 
-### Deploying to AWS with Ansible and Terraform: Setup Credentials and Variables
+### Deploying to AWS with Ansible and Terraform: Terraform Init and IAM
+```bash
+$ terraform init
+$ terraform plan
+$ nano main.tf
+```
+
+```yml
+# IAM SECTION
+resource "aws_iam_instance_profile" "s3_access_profile" {
+  name = "s3_access"
+  role = "${aws_iam_role.s3_access_role.name}"
+}
+resource "aws_iam_role_policy" "s3_access_policy" {
+  name = "s3_access_policy"
+  role = "${aws_iam_role.s3_access_role.id}"
+}
+
+```
 
 # Container Management 
 
