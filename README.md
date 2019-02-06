@@ -868,20 +868,13 @@ $ nano route53.nfo
 
 ### Deploying to AWS with Ansible and Terraform: Setup Credentials and Variables
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-04%20at%206.40.12%20PM.jpg?raw=true)
-- Create files (two tf files for variables.
-  - NOTE: make sure you add \*.tfvars to .gitignore
+- Create files (two tf files for variables)
+- NOTE: make sure you add \*.tfvars to .gitignore
+
 ```bash
 $ cd /home/user/terransible
 $ touch main.tf terraform.tfvars variables.tf
 $ touch userdata aws_hosts wordpress.yml s3update.yml
-$ echo "provider "aws" {
-  region = "${var.aws_region}"
-  profile = "${var.aws_profile}"
-}" > main.tf
-$ echo "variable "aws_region" {}
-variable "aws_profile" {}" > variables.tf
-$ echo "aws_profile = "terransible_lab"
-aws_region = "us-east-1"" > terraform.tfvars
 ```
 
 ### Deploying to AWS with Ansible and Terraform: Terraform Files & Ansible Playbook Files
