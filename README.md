@@ -13,7 +13,7 @@
   - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#deploying-to-aws-with-ansible-and-terraform)
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
   - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
-  - SW Eng - [Methodologies](https://nealalan.github.io/devops-tools-notes/#methodologies)
+  - SW Eng Methodologies - [Agile]((https://nealalan.github.io/devops-tools-notes/#agile), Test Driven Dev
   - SW Eng - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
   - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
   - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
@@ -1013,9 +1013,55 @@ $ ansible-playbook -i aws_hosts s3update.yml
 
 
 # SW Eng
-  
+
+## General Notes
+
+### RESTful APIs
+- RESTful APIs - Stateless REpresentrational State Transfer w/ a separation of client and server
+- REST requires a client make a request to the server (Includes: HTTP verb, Header, Resource path, Message body) and Server sends content type and response code
+- HTTP verbs: GET, POST, PUT, DELETE
+- CRUD: Create, Read, Update, Delete
+- Header content: Accept, MIME, 
+- Paths: must have a representational path such as /customers or /customers/:id
+- Response: 200 OK, 201 Resource created, 202 Accepted, 204 No Content to return, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 405 Not Allowed, 409 Conflict, 500 Server Error
+
+### SOA 
+- SOA - Service Oriented Architecture is a distributed systems architecture that is loosely coupled, uses standard interfaces and protocols and has seamless cross-platform integration
+- Building a service must be a logical presentation of a business activity that is self-contained
+- Standardized service description docs, autonomous, discoverable, reusable
+- SOA 
+
+### Microservices
+- Microservices - Variant of SOA, more fine grained but small and loosely coupled, modular, flexible, scalable, maintainable
+- Better than monolithic architecture because services are small and lower impact deployments
+- Protocols must be lightweight (like rest or message queueing)
+- Independent: Codebase, Running processes, Built independently, Deployed independently, Scaled independently,
+- Easy ti use CI/CD
+
 ## Methodologies
- 
+
+### Agile 
+- Agile is a set of values and principles that break down solos in oranizations by using: Active planning, Evolutionary dev, Early delivery, CI, Rapid and flexible response 
+- Individuals and interactions more than processes and tools
+- Working software more than comprehensive documentation
+- Collaboration vs negotiation
+- Respond to change!
+- Iteriations: Define/plan, Develop, Integrate and Test, Review, Feedback, Release/Incorporate, Adjust/Track, REPEAT
+
+### Test Driven Development
+- Repetition of a very short dev cycle
+  - Write test case around model, run (fails), write some code, run test, refactor code, REPEAT
+- Install node:
+```bash
+$ curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+$ yum -y install nodejs
+$ yum -y install gcc-c++ make
+```
+- Clone code repository
+- package.json contains test scripts
+
+
+
 ## Jenkins
 
 ## GIT
