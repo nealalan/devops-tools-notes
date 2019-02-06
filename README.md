@@ -13,7 +13,7 @@
   - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#deploying-to-aws-with-ansible-and-terraform)
   - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
   - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
-  - SW Eng Methodologies - [Agile]((https://nealalan.github.io/devops-tools-notes/#agile), Test Driven Dev
+  - SW Eng Methodologies - [Agile](https://nealalan.github.io/devops-tools-notes/#agile), Test Driven Dev, CI/CD
   - SW Eng - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
   - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
   - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
@@ -1051,18 +1051,23 @@ $ ansible-playbook -i aws_hosts s3update.yml
 ### Test Driven Development
 - Repetition of a very short dev cycle
   - Write test case around model, run (fails), write some code, run test, refactor code, REPEAT
-- Install node:
-```bash
-$ curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
-$ yum -y install nodejs
-$ yum -y install gcc-c++ make
-```
-- Clone code repository
-- package.json contains test scripts
 
-
-
+### CI/CD
+- Continuous Integration - practice of frequently merging code; execution of automated tests to verify the build; execution of automated tests = A LOT OF WORK
+- CI Server - developer commits code to CI server and automatically performs a buildl executes tests and notifies if the build fails
+- WHY? 
+  - Early detection of certain types of bugs to eliminate problems with bugs in large releases
+  - Allows for continuous testing
+  - Encourages good coding practices
+- Continuous Delivery - practice of continuously maintaining code in a deployable state; code always in a deployable state and can take minutes
+- CD Stages: automated build, automated test, manual acceptance testing = deployable artifact or package & deployment to prod
+- WHY?
+  - New features to customers quicker
+  - Less rollback and smaller rollback with small problems or bugs = Lower risk
+  - Fearless deployments
+  
 ## Jenkins
+
 
 ## GIT
 
