@@ -921,11 +921,55 @@ $ terraform apply
 $ ansible-playbook -i aws_hosts s3update.yml
 ```
 
-#### Deploying to AWS with Ansible and Terraform: Troubleshooting
+### Deploying to AWS with Ansible and Terraform: Troubleshooting
 - Terraform: command not found - **may need to add it to the path**
 - Key isn't added - **need to ssh-add**
 - Ansible can't connect - **check ansible.cfg host_key_checking = false**
 - Test a major change access - `ansible -i aws_hosts -u ec2-user -m ping dev`
+
+1. What will happen if Terraform makes a change in a later version that isn't supported by your script?
+  - The script may break, Terraform does not automatically fix errors.
+2. What is one command that you can use to access your ssh agent?
+  - ssh-agent bash
+3. What two Route 53 Zone types are available?
+  - Public, Private
+4. What must be set to "False" in order for the Ansible-playbook to avoid issues connecting to an AWS instance for the first time?
+  - host_key_checking
+5. What is a prerequisite for installation of the AWS CLI
+  - python-pip
+6. What command allows you to setup your AWS CLI with your credentials and region?
+  - aws configure
+7. What three things could cause your Ansible Playbook called by Terraform not to run successfully on the AWS instance?
+  -  key not added to ssh-agent, Incorrect Security Group rules, host_key_checking set to true
+8. What happens if a variable defined in your main.tf (or other infrastructure) file is not listed in your variables.tf file?
+  - The apply will fail
+9. What punctuation is used to encapsulate a list of multiple items in a Terraform *.tf file.
+  - brackets
+10. What Terraform command will deploy the scripted infrastructure?
+  - terraform apply
+11. What Terraform command will "clean up" the code in the tf files?
+  - terraform fmt
+12. What switch for the command that runs an Ansible Playbook is used to specify a custom inventory file?
+  - -i
+13. What command runs an Ansible Playbook?
+  - ansible-playbook
+14. What AWS feature allows us to access AWS repositories privately as well as the S3 bucket all without using an Internet Gateway for our instances?
+  - S3 VPC Endpoint
+15. What must be modified for the Terraform command to run by just using the command "Terraform"?
+  - The PATH
+16. What command will initialize the Terraform directory and download required plugins?
+  - terraform init
+17. What happens if you don't specify the value of a variable in the variables.tf file in the terraform.tfvars file?
+  - A terraform apply will ask you for the value before applying
+18. What AWS product allows us to server traffic to multiple private instances without exposing them to the public?
+  - Elastic Load Balancer
+19. When creating your static nameservers used in Route 53, where must you set those nameservers in order for the deployment to work correctly and the zones to propagate to the internet?
+  - nameservers field in your registrar
+20. What command will allow you to list keys associated with your ssh-agent?
+  - ssh-add -l
+21. What Route 53 feature allows you to reuse nameservers for multiple deployments?
+  - reusable-delegation-set
+
 
 
 # Container Management 
