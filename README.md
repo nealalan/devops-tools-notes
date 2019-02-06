@@ -395,12 +395,39 @@ $ vagrant up
 $ vagrant ssh
 ```
 
-### Box file format
+### Vagrant Box file format
 
 - Can create a box file
 - Can download a box file
 - METADATA.JSON - lists metadata for box
 - PACKAGE.BOX - box information file
+
+### Vagrant Review Questions
+1. When executing a vagrant init, what flag would you use to overwrite a Vagrantfile if one has already been created.
+  - vagrant -f
+2. Which command returns all installed boxes?
+  - vagrant box list
+3. When executing vagrant destroy, what flag would you use so that you are not prompted to confirm that you want to destroy the resources?
+  - vagrant -f
+4. What are the three ways that Vagrant will try and detect a provider?
+  - Execute vagrant up with the --provider flag. Use the VAGRANT_DEFAULT_PROVIDER environmental variable in your Vagrantfile. Example: ENV['VAGRANT_DEFAULT_PROVIDER'] = ''
+Vagrant will go through all of the config.vm.provider calls in the Vagrantfile and try each in order.
+5. Fill in the blank. The primary function of the _ _ _ _ _ _ _ _ _ is to describe the type of machine required for a project, and how to configure and provision these machines.
+  - Vagrantfile
+6. What file format should the info file be in?
+  - JSON
+7. When creating a base box, what are the default settings that should configured?
+  - Set the root password to vagrant.
+  - Create a vagrant user for SSH access to the machine.
+  - Configure the SSH user to have passwordless sudo configured.
+8. Which of these is true about Docker Base Boxes?
+  - The Docker provider does not require a Vagrant box.
+9. Which of the following commands will create a new Box file from a Box imported into Vagrant.
+  - vagrant box repackage
+10. What are the three different components of a Box?
+  - A Box Information File
+  - A Box Catalog Metadata File
+  - A Box File
 
 ## Packer 
 - Create machine images for multiple platforms with a single custom config
