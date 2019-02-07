@@ -1,5 +1,3 @@
-# devops-tools-notes
-
 # [nealalan.github.io](https://nealalan.github.io)/[devops-tools-notes](https://nealalan.github.io/devops-tools-notes)
 
 ## TOC
