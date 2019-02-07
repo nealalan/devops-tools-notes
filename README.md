@@ -3,20 +3,26 @@
 # [nealalan.github.io](https://nealalan.github.io)/[devops-tools-notes](https://nealalan.github.io/devops-tools-notes)
 
 ## TOC
-  - Machine Deployment - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
-  - Machine Deployment - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
+  - Machine Deployment 
+    - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
+    - [Packer](https://nealalan.github.io/devops-tools-notes/#packer) & Cloud Init
     - [Using Packer to Create an AWS AMI](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#using-packer-to-create-an-ami)
     - [Using Packer to Create and run a Docker Image](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#using-packer-to-create-a-docker-image)
-  - Configuration Management - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
-  - Configuration Management - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
-  - Configuration Management - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
-  - Configuration & Deployment - [Deploying to AWS with Ansible and Terraform](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#deploying-to-aws-with-ansible-and-terraform)
-  - Container Management - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
-  - Container Management - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
-  - SW Eng Methodologies - [Agile](https://nealalan.github.io/devops-tools-notes/#agile), Test Driven Dev, CI/CD
-  - SW Eng - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
-  - SW Eng - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
-  - SW Eng - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
+  - Configuration Management & Deployment
+    - [Puppet](https://nealalan.github.io/devops-tools-notes/#puppet) 
+    - [Chef](https://nealalan.github.io/devops-tools-notes/#chef)
+    - [Ansible](https://nealalan.github.io/devops-tools-notes/#ansible)
+    - [Deploying to AWS with Ansible and Terraform](https://github.com/nealalan/devops-tools-notes/blob/master/README.md#deploying-to-aws-with-ansible-and-terraform)
+  - Container Management 
+    - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
+    - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
+  - Software Engineering
+    - [Agile](https://nealalan.github.io/devops-tools-notes/#agile), 
+    - [Test Driven Dev](https://nealalan.github.io/devops-tools-notes/#test-driven-development)
+    - [CI/CD](https://nealalan.github.io/devops-tools-notes/#cicd)
+    - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
+    - [GIT](https://nealalan.github.io/devops-tools-notes/#git)
+    - [Prod Concepts](https://nealalan.github.io/devops-tools-notes/#prod-concepts)
   
 ## DEFINITIONS
 - Vagrant = single work flow for spinning up environments
