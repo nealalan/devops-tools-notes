@@ -871,7 +871,45 @@ $ ansible-vault rekey file.yml
 $ ansible-vault encrypt file.yml
 $ ansible-vault decrypt file.yml
 $ ansible-vault view file.yml
+```
 
+### Configure Ansible Master to work on Ansible Client
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-06%20at%209.52.48%20PM.jpg?raw=true)
+
+- On Ansible Server
+```bash
+$ adduser ansible
+$ passwd ansible
+$ visudo
+> add under root to /etc/sudoers: ansible ALL=(ALL)    NOPASSWD: ALL
+$ su ansible
+$ ssh-keygen
+```
+
+- On Client Server
+```bash
+$ adduser ansible
+$ passwd ansible
+$ visudo
+> add under root to /etc/sudoers: ansible ALL=(ALL)    NOPASSWD: ALL
+```
+
+- On Ansible Server 
+```bash
+$ ssh-copy-id <client_ip>
+$ exit   // back to root
+$ vi /etc/ansible/hosts
+> add to the top of the file: client
+$ cd /home/cloud_user
+$ cp playbook.yml /home/ansible
+$ chown ansible:ansible playbook.yml
+$ su ansible -
+$ ansible-playbook playbook.yml
+```
+
+- On Client Server (as root)
+```bash
+$ elinks
 ```
 
 ## Deploying to AWS with Ansible and Terraform
