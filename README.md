@@ -17,7 +17,7 @@
     - [Docker](https://nealalan.github.io/devops-tools-notes/#docker), [Docker Compose](https://nealalan.github.io/devops-tools-notes/#docker-compose), [Docker Swarm](https://nealalan.github.io/devops-tools-notes/#docker-swarm), [Docker Machine](https://nealalan.github.io/devops-tools-notes/#docker-machine)
     - [Kubernetes](https://nealalan.github.io/devops-tools-notes/#kubernetes)
   - Software Engineering
-    - [Agile](https://nealalan.github.io/devops-tools-notes/#agile), 
+    - [Agile](https://nealalan.github.io/devops-tools-notes/#agile)
     - [Test Driven Dev](https://nealalan.github.io/devops-tools-notes/#test-driven-development)
     - [CI/CD](https://nealalan.github.io/devops-tools-notes/#cicd)
     - [Jenkins](https://nealalan.github.io/devops-tools-notes/#jenkins)
@@ -751,14 +751,128 @@ $ curl localhost
 ```
 
 # Configuration Management
+- Idempotency - apply an operation multiple times without changing the result
+  - tools will avoid repeating tasks
+  - tools will maint the desired state when run multiple times
+  - Note: Puppet isn't idempotent by default - you have to force it!
+
+- Reasons for Configuration management: 
+  - Quick provisioning of New Servers; Quick recovery
+  - Version Control for servers
+  - Replicated environments
+  - Resolves configuration drift from the desired state
+    - It's a problem is the configuration is lost!
+    - Automation plays a huge role in the solution!
+
+![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-06%20at%209.04.41%20PM.jpg?raw=true)
 
 ## Puppet
+- Puppet = declarative configuration management tool for \*nix and Windows; client/server model
+- Domain Specific Language (DSL) similar to Ruby
+- Resource types:
+  - Users
+  - Groups
+  - Files/Directory
+  - Package
+  - Service
+- Modules hold Manifest files 
+- Mainfest files hold resource types
 
+### Puppet Commands
+```bash
+$ puppet apply    // apply manifests locally to system
+$ puppet agent    // apply manifests to puppet magest by applying catalog
+$ puppet cert     // list and manage built-in cert authority
+$ puppet module   // pull down modules or create our own
+$ puppet resource // inspect or manipulate 
+$ puppet parse    // validate puppet files
+```
 
 ## Chef
+- Chef = configuration management tool written in Ruby; client/server model
+- recieps and cookbooks are written locally & need Chef Dev kit installed locally to test code
+- declarative approach
+- testing tools:
+  - cookstyle - ensure best practices and uniformity
+  - foodcritic - analyzed Ruby code against rules, enforce behaviors and returns violations
+  - chefspec - simulated run and looks for problems
+  - inspec - opensource testing framework for compliance
+  - Test Kitchen - tests cookbook across any platform, providers or testing suites
+- resources describe infrastructure
+  - Recipe groups Resources
+  - Cookbook structures Recipes
+  
+- chef-client is the agent
+  - register and auth the node
+  - build the node object
+  - synch cookbooks
 
-
+### Chef Commands
+- chef-server-ctl command line utility
+  - start and stop services 
+  - reconfig server
+  - gather chef logs
+  - backup and restore chef server
+  
+```bash
+$ chef-server-ctl
+$ chef-server-ctl restore BACKUP_PATH
+$ chef-server-ctl backup-recover
+$ chef-server-ctl cleanse   // undo the recover or reconfigure
+$ chef-server-ctl gather-logs
+$ chef-server-ctl ha-status
+$ chef-server-ctl show-config
+$ chef-server-ctl  restart SERVICE_NAME
+$ chef-server-ctl  service-list
+$ chef-server-ctl  start SERVICE_NAME
+$ chef-server-ctl  status
+$ chef-server-ctl  stop SERVICE_NAME
+$ chef-solo     // exec locally
+$ knife         // interact with chef server
+$ knife cookbook
+$ knife cookbook generate COOKBOOK_NAME
+$ knife cookbook delete COOKBOOK_NAME[version]
+$ knife cookbook download COOKBOOK_NAME[version]
+$ knife cookbook list
+$ knife cookbook metadata
+$ knife cookbook show COOKBOOK_NAME
+$ knife cookbook upload COOKBOOK_NAME
+```
+  
 ## Ansible
+- Ansible = agentless IT automation tool for config mgmt, software provisioning, app 
+- Playbooks 
+- Multi-tier rollouts
+- Default config loc `/etc/ansible/hosts`
+- ANSIBLE_CONFIG - environment variables
+- ansible.cfg - looks in current dir, home dir and `/etc/ansible/ansible.cfg`
+
+```bash
+$ ansible
+$ ansible-config
+$ ansible-console   // REFL console for executing Ansible tasks
+$ ansible-dock
+$ ansible-galaxy    // upload rolls for sharing packages
+$ ansible-inventory
+$ ansible-playbook
+$ ansible-pull
+$ ansible-vault     // encrypt/decrypt secrets
+$ ansible -i
+```
+
+- Ansible Vault = used to encrypt sensitive data so you can share or place in source
+
+```bash
+$ ansible-playbook --ask-vault-pass
+$ ansible-playbook --vault-password-file:<file>
+$ ansible-vault create file.yml
+$ ansible-vault edit file.yml
+$ ansible-vault rekey file.yml
+$ ansible-vault encrypt file.yml
+$ ansible-vault decrypt file.yml
+$ ansible-vault view file.yml
+
+```
 
 ## Deploying to AWS with Ansible and Terraform
 
