@@ -1156,8 +1156,89 @@ $ ansible-playbook -i aws_hosts s3update.yml
 
 
 # Container Management 
+- Containers = application with all it's parts and dependencies in a loosely isolated environment
 
 ## Docker
+- Docker = make it easy to create, deploy and run apps by using containers running on the host kernel
+- Components:
+  - server as a daemon
+  - REST API
+  - CLI
+- Docker Images - built from a series of layers based upon instructions in the Dockerfile
+  - only last layer is not read-only
+  - difference between a comainer and an image is the image is a container + writable layer
+- Docker Volumes - Used to handle persistent data in docker because easy to backup
+- Docker Networks - connect containers together or non-docker workloads
+  - Bridged network connection - software bridge fwds traffic between segments and isolates containers
+  - Host network - docker uses directly
+  - Overlay - allow swarm services 
+  - Macvlan - allows assignment of MAC access to physical interface of a container
+  - Overlay network - sits on top of host network to create a distributed network
+- Dockerfile - instructions for automatically building Docker images
+  - executed in order!
+  - can use environment variables ${variable_name}
+  - FROM instruction - base image
+  - RUN to execute command
+  - CMD defaults from an executin container
+  - LABEL is metadata
+  - MAINTAINER is the autoerh of the generated images
+  - EXPOSE informs docker that a container listens on a network port
+  - ENV sets environment variable
+  - ADD copies files/dirs to the Docker image
+  - COPY copies files/dirs to the Docker container
+  - ENTRYPOINT allows you to config a container that will run as an executable
+  - VOLUME is the mount point
+  - USER sets the user name instructions are exec as
+  - WORKDIR
+  - ARG defines a variable that users can pass at build-time
+
+### Docker Commands
+```bash
+$ docker attach    // attach to a running container (like SSH but if you detach you shut it down)
+$ docker build     // build image from a Dockerfile
+$ docker exec      // run a command in a running container
+$ docker exec -it nginx-test /bin/bash   // connect to this container with a bash shell
+$ docker images 
+$ docker inspect . // low level info about Docker object
+$ docker logs
+$ docker network
+$ docker network inspect <network-name>
+$ docker node .     // manage swarm nodes
+$ docker ps .       // list running continares (-a --all)
+$ docker pull       // retrieve from registry
+$ docker push       // push to a registry
+$ docker restart    
+$ docker rm         // remove container
+$ docker rmi        // remove images
+$ docker run        // run a command in a new container
+$ docker run -d --name=static-site -p 80:80 la/static:latest
+$ docker start / stop
+$ docker swarm
+$ docker volume     // manage volumes
+$ docker volume ls
+$ docker volume rm <volume>
+```
+## Docker Dockerfile
+1. pull down repo
+```bash
+$ git clone https://github.com/linuxacademy/content-express-demo-app.git
+```
+2. create dockerfile
+```yml
+FROM node
+
+RUN mkdir -p /var/node
+ADD content-express-demo-app/ /var/node
+WORKDIR /var/node
+RUN npm install
+
+CMD bin/www
+```
+3. build image
+```bash
+$ docker build -t la/app-node -f Dockerfile .
+$ docker images
+```
 
 ## Docker Compose
 
@@ -1166,7 +1247,50 @@ $ ansible-playbook -i aws_hosts s3update.yml
 ## Docker Machine
 
 ## Kubernetes
+- Kubernetes = Open source container orchestration tool developed by Google for their workloads
+  - container deployment and rollout controls 
+  - will keep containers running and handle control changes
+  - allows custom settings for compute and memory
+  - cluster can run anywhere with a mix of virtual env, on prem, etc 
+  - has built in service discover and autoscaling
+  - clusters linked so if one goes down the other can take over
+- Pod = Processes running on a cluster, representing a unit of a deployment (single container or tightly coupled containers)
+  - no persistence in a pod, to protect the data, create a replicaset
+  - deployments are better to use than a replicaset
 
+### Kubernetes Commands
+```bash
+$ kubectl get pod nginx-pod-demo
+$ kubectl create -f pod.yml
+$ kubectl delete pod nginx-pod-demo
+$ kubectl create -f replicaset.yml
+$ kubectl get replicasets
+$ kubectl get pods
+$ kubectl delete pod <pod-name>   // a new one will automatically be created in it's place
+$ kubeget pods
+$ kubectl scale --replicas=4 replicaset/replicaset-demo   // bump up to 4
+$ kubectl delete replicaset <replicaset-name>             // to get rid of replciaset
+# 
+$ kubectl get deployments
+$ kubectl scale --replicas=4 deployment/nginx-deployment
+$ kubectl delete deployment nginx-deployment
+```
+
+### Kubernetes: Configuring 2 servers
+1. Create 2 "Cloud Native Kubernetes" Servers
+2. Setup master
+```bash
+$ kubeadm init --pod-network-cidr=10.244.0.0/16
+$ mkdir -p $HOME/.kube
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+3. Install flannel on master
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+```
+4. Grab the `$ kube join` command from the master to paste into the 2nd server
+5. On the master run `$ kubectl get nodes` and you should see both servers
 
 # SW Eng
 
