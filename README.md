@@ -1220,10 +1220,13 @@ $ docker volume rm <volume>
 ```
 ## Docker Dockerfile
 1. pull down repo
+
 ```bash
 $ git clone https://github.com/linuxacademy/content-express-demo-app.git
 ```
+
 2. create dockerfile
+
 ```yml
 FROM node
 
@@ -1234,7 +1237,9 @@ RUN npm install
 
 CMD bin/www
 ```
+
 3. build image
+
 ```bash
 $ docker build -t la/app-node -f Dockerfile .
 $ docker images
@@ -1279,16 +1284,20 @@ $ kubectl delete deployment nginx-deployment
 ### Kubernetes: Configuring 2 servers
 1. Create 2 "Cloud Native Kubernetes" Servers
 2. Setup master
+
 ```bash
 $ kubeadm init --pod-network-cidr=10.244.0.0/16
 $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
+
 3. Install flannel on master
+
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 ```
+
 4. Grab the `$ kube join` command from the master to paste into the 2nd server
 5. On the master run `$ kubectl get nodes` and you should see both servers
 
