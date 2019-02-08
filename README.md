@@ -1192,7 +1192,7 @@ $ ansible-playbook -i aws_hosts s3update.yml
   - WORKDIR
   - ARG defines a variable that users can pass at build-time
 
-### Docker Commands
+### Docker: Commands
 ```bash
 $ docker attach    // attach to a running container (like SSH but if you detach you shut it down)
 $ docker build     // build image from a Dockerfile
@@ -1218,7 +1218,7 @@ $ docker volume     // manage volumes
 $ docker volume ls
 $ docker volume rm <volume>
 ```
-## Docker Dockerfile
+### Docker: Dockerfile
 1. pull down repo
 
 ```bash
@@ -1244,6 +1244,39 @@ CMD bin/www
 $ docker build -t la/app-node -f Dockerfile .
 $ docker images
 ```
+
+### Docker: Docker Volumes
+1. Create Dockerfile
+
+```yml
+FROM nginx
+VOLUME /usr/share/nginx/html
+VOLUME /var/log/nginx
+WORKDIR /usr/share/nginx/html
+```
+
+2. Build image
+
+```bash
+$ docker build -t la/static-site:latest -f Dockerfile .
+$ docker images
+```
+
+3. Create volume for NGINX code and logs
+
+```bash
+$ sudo su
+$ docker volume create nginx-code
+$ docker volume create nginx-logs
+$ docker volume ls
+$ docker run -d --name=static-side -p 80:80 --mount source=nginx-code,target=/usr/share/nginx/html --mount source=nginx-logs,target=/var/log/nginx la/static-site:latest
+$ docker ps
+$ ls /var/lib/docker/volumes
+$ ls /var/lib/docker/volumes/nginx-code/_data/
+$ vi /var/lib/docker/volumes/nginx-code/_data/index.html
+````
+
+4. look at the webpage served from the IP address
 
 ## Docker Compose
 
