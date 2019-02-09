@@ -1192,7 +1192,6 @@ $ ansible-playbook -i aws_hosts s3update.yml
   - WORKDIR
   - ARG defines a variable that users can pass at build-time
 
-### Docker: Commands
 ```bash
 $ docker attach    // attach to a running container (like SSH but if you detach you shut it down)
 $ docker build     // build image from a Dockerfile
@@ -1278,15 +1277,63 @@ $ vi /var/lib/docker/volumes/nginx-code/_data/index.html
 
 4. look at the webpage served from the IP address
 
-### Docker: Docker Networks
+### Docker: Docker Compose
+- Docker Compose = install Compose to use a yml file to deploy multi-container Docker applications
+  - file must be called docker-compose.yml unless you use `$ docker-compose -f`
+  - for instance, run nginx in one container and redis in another
+  
+```bash
+$ docker-compose build -h
+$ docker-compose up         // runs in forground
+$ docker-compose up -d      // runs not in forground (detach mode)
+$ docker-compose ps
+$ docker-compose start stop // runs in background
+$ docker-compose rm         // delete the build (only)
+$ docker-compose logs
+$ docker-compose pause unpause
+$ docker-compose down       // stop and remove all container, networks, etc
+$ docker-compose restart
+```
 
+### Docker: Docker Compose file
+- Dockerfile
+```yml
+FROM nginx
+WORKDIR /usr/share/nginx/html
+COPY index.html ./
+```
 
+- docker-compose.yml
+```yml
+version: `3.3`
+services: 
+  redis: 
+    image: redis:latest
+  webapp:
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+    volumes:
+      - nginx-vol:/usr/share/nginx/html
+    networks:
+      - nginx-net
+    links:
+      - redis
+volumes:
+  nginx-vol:
+networks:
+  nginx-net:
+```
+- check, build and bring up nginx container linked to redis
+```bash
+$ docker-compose config
+$ docker-compose build
+$ docker-compose up -d
+```
 
-## Docker Compose
+### Docker: Swarm
 
-## Docker Swarm
-
-## Docker Machine
+### Docker: Machine
 
 ## Kubernetes
 - Kubernetes = Open source container orchestration tool developed by Google for their workloads
@@ -1300,7 +1347,6 @@ $ vi /var/lib/docker/volumes/nginx-code/_data/index.html
   - no persistence in a pod, to protect the data, create a replicaset
   - deployments are better to use than a replicaset
 
-### Kubernetes Commands
 ```bash
 $ kubectl get pod nginx-pod-demo
 $ kubectl create -f pod.yml
@@ -1340,9 +1386,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
 
 # SW Eng
 
-## General Notes
-
-### RESTful APIs
+## RESTful APIs
 - RESTful APIs - Stateless REpresentrational State Transfer w/ a separation of client and server
 - REST requires a client make a request to the server (Includes: HTTP verb, Header, Resource path, Message body) and Server sends content type and response code
 - HTTP verbs: GET, POST, PUT, DELETE
@@ -1351,22 +1395,20 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
 - Paths: must have a representational path such as /customers or /customers/:id
 - Response: 200 OK, 201 Resource created, 202 Accepted, 204 No Content to return, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 405 Not Allowed, 409 Conflict, 500 Server Error
 
-### SOA 
+## SOA 
 - SOA - Service Oriented Architecture is a distributed systems architecture that is loosely coupled, uses standard interfaces and protocols and has seamless cross-platform integration
 - Building a service must be a logical presentation of a business activity that is self-contained
 - Standardized service description docs, autonomous, discoverable, reusable
 - SOA 
 
-### Microservices
+## Microservices
 - Microservices - Variant of SOA, more fine grained but small and loosely coupled, modular, flexible, scalable, maintainable
 - Better than monolithic architecture because services are small and lower impact deployments
 - Protocols must be lightweight (like rest or message queueing)
 - Independent: Codebase, Running processes, Built independently, Deployed independently, Scaled independently,
 - Easy ti use CI/CD
 
-## Methodologies
-
-### Agile 
+## Agile 
 - Agile is a set of values and principles that break down solos in oranizations by using: Active planning, Evolutionary dev, Early delivery, CI, Rapid and flexible response 
 - Individuals and interactions more than processes and tools
 - Working software more than comprehensive documentation
@@ -1374,11 +1416,11 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
 - Respond to change!
 - Iteriations: Define/plan, Develop, Integrate and Test, Review, Feedback, Release/Incorporate, Adjust/Track, REPEAT
 
-### Test Driven Development
+## Test Driven Development
 - Repetition of a very short dev cycle
   - Write test case around model, run (fails), write some code, run test, refactor code, REPEAT
 
-### CI/CD
+## CI/CD
 - Continuous Integration - practice of frequently merging code; execution of automated tests to verify the build; execution of automated tests = A LOT OF WORK
 - CI Server - developer commits code to CI server and automatically performs a buildl executes tests and notifies if the build fails
 - WHY? 
