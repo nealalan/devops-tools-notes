@@ -1,5 +1,7 @@
 # [nealalan.github.io](https://nealalan.github.io)/[devops-tools-notes](https://nealalan.github.io/devops-tools-notes)
 
+**Note: The jekyl markdown code used by Github will not display this page correctly on github pages. I recommend looking at the [repo version](https://github.com/nealalan/devops-tools-notes) of this page so it will display correctly.**
+
 ## TOC
   - Machine Deployment 
     - [Vagrant](https://nealalan.github.io/devops-tools-notes/#vagrant---vagrantupcom)
@@ -40,13 +42,12 @@
 - Vagrantfiles describes, configures, and provisions the machines you'll need.
 - Available boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
 
-
-### Installing on a Mac
+### Vagrant: Installing on a Mac
 
 1. Can download from the hasicorp vagrantup site. DOWNLOAD: [https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/downloads.html)
 2. use brew... I tried this method, however vagrant 2.0.0 had been previously installed and no longer works. But the system will not use the latest version. Tried uninstalling and deleting everything I can but still can't use the version installed with brew.
 
-### Use on a Mac
+### Vagrant: Use on a Mac
 
 0. Install the latest version of [VirtualBox](https://www.virtualbox.org/wiki/Downloads). I had a version that was out of date and would no longer run on MacOS.
 
@@ -87,7 +88,7 @@ $ vagrant ssh default
 $ vagrant destroy
 ```
 
-#### Additional Commands
+### Vagrant: Additional Commands
 
 ```bash
 # make sure your vagrant file is valid
@@ -97,7 +98,7 @@ $ vagrant provision
 $ vagrant reload
 ```
 
-### Use Vagrant with Docker
+### Vagrant: Use with Docker
 
 1. Configure your [Vagrantfile](https://www.vagrantup.com/docs/vagrantfile/). This will pull down a **ghost blog container** to run in docker and **map port 80** to 2368 on the counter
 ```bash
@@ -120,7 +121,7 @@ $ docker ps
 $ docker exec -i -t [container-id] /bin/bash
 ```
 
-### Mapping files
+### Vagrant: Mapping files
 
 - Map the local file (in the host vagrant file folder) to the folder on the virtual machine
 ```bash
@@ -130,7 +131,7 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-### Connecting to vagrant with SSH
+### Vagrant: Connecting with SSH
 
 - Use SSH versus VAGRANT SSH to connect from the localhost to vagrant
 ```bash
@@ -143,7 +144,7 @@ $ ssh vagrant@localhost -p 2222 -i ~/.vagrant.d/insecure_private_key
 $ vagrant ssh-config
 ```
 
-### Provisioning using vagrant in the shell and w/ puppet
+### Vagrant: Provisioning in the shell and w/ puppet
 
 1. Clone Sample Vagrantfile: [https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet](https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet)
 ```bash
@@ -205,7 +206,6 @@ Vagrant.configure("2") do |config|
       shell.inline = "apt install apache2 -y"
     end
   end
-  
   config.vm.define "db" do |db|
     db.vm.box = "ubuntu/trusty64"
     db.vm.hostname = "db.vagrant.vm"
@@ -233,7 +233,7 @@ $ sudo su
 $ mysql
 ```
 
-### Vagrant on CentOS Lab Notes
+### Vagrant: CentOS Lab Notes
 
 ```bash
 # check for docker
@@ -262,7 +262,7 @@ $ curl http://localhost
 # pull up web browser
 ```
 
-### Use Vagrant and Docker to Build a DEV Env
+### Vagrant: Use w/ Docker to Build a DEV Env
 
 1. Log into instance with Vagrant and Docker installed
 2. Setup Dockerfile
@@ -271,7 +271,8 @@ $ sudo su
 $ yum install nano
 $ cd root/docker
 $ nano Dockerfile
-
+```
+```yml
 FROM node:alpine
 COPY code /code
 WORKDIR /code
@@ -316,9 +317,9 @@ $ vagrant reload
 
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-18%20at%206.49.13%20PM.jpg?raw=true)
 
-### Vagrant Box Files
+### Vagrant Box 
 
-- packaging format for vagrant 
+- Vagrant Box: packaging format for vagrant 
 - great for versioning changes, go back, fix a problem and rolls it out
 - Download Vagrant Boxes: [https://app.vagrantup.com/boxes/search](https://app.vagrantup.com/boxes/search)
 
@@ -346,7 +347,7 @@ $ vagrant box add ubuntu64
 $ vagrant init hashicorp/precise64
 ```
 
-### Creating a Vagrant Box file
+### Vagrant Box: Creating a Vagrant Box file
 
 1. Go into project folder "vagrant_box"
 2. Download Ubuntu 18.04 using curl
@@ -403,14 +404,15 @@ $ vagrant up
 $ vagrant ssh
 ```
 
-### Vagrant Box file format
+### Vagrant Box: file format
 
 - Can create a box file
 - Can download a box file
 - METADATA.JSON - lists metadata for box
 - PACKAGE.BOX - box information file
 
-### Vagrant Review Questions
+### Vagrant: Review Questions
+
 1. When executing a vagrant init, what flag would you use to overwrite a Vagrantfile if one has already been created.
   - vagrant -f
 2. Which command returns all installed boxes?
@@ -483,7 +485,7 @@ $ packer validate
   - Vagrant
   - vSphere
 
-### Install Packer
+### Packer: Install
 
 ```bash
 $ cd /usr/local/bin
@@ -495,7 +497,7 @@ $ cd
 $ packer --version
 ```
 
-### Create a Packer Template
+### Packer: Create a Packer Template
 
 ```bash
 $ mkdir packer
@@ -589,13 +591,14 @@ echo "Hello World. The time is now $(date -R)!" | tee /root/output.txt
 ```
 - See cloud-init modules: https://cloudinit.readthedocs.io/en/latest/topics/modules.html
 
-### Using Packer to Create an AMI
+### Packer: Using Packer to Create an AMI
 - Use Cloud9 to create a Packer File that will create an AMI
 
 - Install Packer on Cloud9 Server
   - AWS Console search Cloud9, Open IDE
   - Use the GUI console interface
   - Goto packer.io, Download, Copy the link
+  
 ```bash
 $ sudo su
 $ cd /usr/local/bin
@@ -653,20 +656,16 @@ $ exit
 $ packer validate
 $ packer build -var 'ami_name=ami-make1up' -var 'base_ami=ami-1853ac65' -var 'vpc_id=' -var 'subnet_id=' packer.json
   ```
+  
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.36.49%20PM.jpg?raw=true)
 
 - Copy AMI-ID & Verify in EC2
 
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-01-22%20at%208.40.26%20PM.jpg?raw=true)
 
-
-### Using Packer to Create a Docker Image
+### Packer: Using Packer to Create a Docker Image
 
 1. In the root directory (of an instance), create a packerfile.json with the following contents:
-
-```bash
-$ sudo su -
-```
 
   - Create a variable called repository, the default values should be la/express.
   - Create a variable called tag; the default values should be 1.0. 
@@ -687,8 +686,7 @@ $ sudo su -
   - Set repository to use the repository variable.
   - Set tag to use the tag variable.
 
-```bash
-
+```yml
 $ echo '{
   "variables": {
     "repository": "la/express",
@@ -730,13 +728,11 @@ $ echo '{
 ```
 
 4. Validate the packerfile.json.
-
 ```bash
 $ packer validate packerfile.json
 ```
 
 5. Build the docker image by Executing packer build.
-
 ```bash
 $ packer build --var 'repository=la/express' --var 'tag=0.0.1' packerfile.json
 # show the images that exist
@@ -744,7 +740,6 @@ $ docker images
 ```
 
 6. Start a Docker container by executing: 
-
 ```bash
 $ docker run -dt -p 80:3000 la/express:0.0.1 node /var/code/bin/www
 # validate running
@@ -780,7 +775,6 @@ $ curl localhost
 - Modules hold Manifest files 
 - Mainfest files hold resource types
 
-### Puppet Commands
 ```bash
 $ puppet apply    // apply manifests locally to system
 $ puppet agent    // apply manifests to puppet magest by applying catalog
@@ -809,7 +803,6 @@ $ puppet parse    // validate puppet files
   - build the node object
   - synch cookbooks
 
-### Chef Commands
 - chef-server-ctl command line utility
   - start and stop services 
   - reconfig server
@@ -875,7 +868,7 @@ $ ansible-vault decrypt file.yml
 $ ansible-vault view file.yml
 ```
 
-### Configure Ansible Master to work on Ansible Client
+### Ansible: Configure Master to work on Client
 ![](https://github.com/nealalan/devops-tools-notes/blob/master/images/Screen%20Shot%202019-02-06%20at%209.52.48%20PM.jpg?raw=true)
 
 - On Ansible Server
@@ -1157,8 +1150,6 @@ $ ansible-playbook -i aws_hosts s3update.yml
 21. What Route 53 feature allows you to reuse nameservers for multiple deployments?
   - reusable-delegation-set
 
-
-
 # Container Management 
 - Containers = application with all it's parts and dependencies in a loosely isolated environment
 
@@ -1281,6 +1272,10 @@ $ vi /var/lib/docker/volumes/nginx-code/_data/index.html
 
 4. look at the webpage served from the IP address
 
+### Docker: Docker Networks
+
+
+
 ### Docker: Docker Compose
 - Docker Compose = install Compose to use a yml file to deploy multi-container Docker applications
   - file must be called docker-compose.yml unless you use `$ docker-compose -f`
@@ -1388,7 +1383,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
 4. Grab the `$ kube join` command from the master to paste into the 2nd server
 5. On the master run `$ kubectl get nodes` and you should see both servers
 
-# SW Eng
+# Software Engineering
 
 ## RESTful APIs
 - RESTful APIs - Stateless REpresentrational State Transfer w/ a separation of client and server
@@ -1439,6 +1434,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
   - Fearless deployments
   
 ## Jenkins
+
 
 
 ## GIT
