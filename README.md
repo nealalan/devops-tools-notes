@@ -150,7 +150,7 @@ $ vagrant ssh-config
 $ git clone https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet.git vagrant
 ```
 
-2. Setup the vagrant file
+2. Setup the vagrant file 
 ```bash
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
