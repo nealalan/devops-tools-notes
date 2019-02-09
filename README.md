@@ -1274,7 +1274,15 @@ $ vi /var/lib/docker/volumes/nginx-code/_data/index.html
 
 ### Docker: Docker Networks
 
+- Create network: App-bridge on nginx
 
+```yml
+$ docker network create app-bridge
+$ docker network ls
+$ docker run -dt --name my-app --network app-bridge nginx:latest
+$ docker ps
+$ docker inspect <name>
+```
 
 ### Docker: Docker Compose
 - Docker Compose = install Compose to use a yml file to deploy multi-container Docker applications
@@ -1328,6 +1336,34 @@ networks:
 $ docker-compose config
 $ docker-compose build
 $ docker-compose up -d
+```
+
+- another set of linked servers - APACHE <-> SQL
+```yml
+version: `3.3`
+services: 
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/bar/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: R@@tP4SSw3333rd
+      MYSQL_DATABASE: app_name
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: 4pp_R@@tP4SSw3333rd
+  webapp:
+    image: php:7.0-apache
+    volumes:
+      - app_data:/var/www/html
+      - app_logs:/var/logs/apache2
+    restart: always
+    links:
+      - db
+volumes:
+  db_data:
+  app_data:
+  app_logs:
 ```
 
 ### Docker: Swarm
