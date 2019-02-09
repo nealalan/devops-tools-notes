@@ -56,10 +56,12 @@
 #   within ~/Projects/vagrant/
 $ vagrant init
 ```
+
 2. Edit vagrant file
 ```bash
 $ atom ~/Projects/vagrant/Vagrantfile
 ```
+
 3. Bring up vagrant
 ```bash
 # Setup environment Create and configure guest machines according to Vagrantfile
@@ -67,21 +69,25 @@ $ vagrant up
 # ALSO:
 $ vagrant up --PROVIDER=VirtualBox --debug
 ```
+
 4. See machine running
 ```bash
 # status of machines in env
 $ vagrant status
 ```
+
 5. connect to the machine instance
 ```bash
 # connect
 $ vagrant ssh default
 ```
+
 6. stop and destroy the machine (all resources)
 ```bash
 $ vagrant destroy
 ```
-- Additional Commands :
+
+- Additional Commands:
 ```bash
 # make sure your vagrant file is valid
 $ vagrant validate
@@ -302,7 +308,6 @@ $ docker ps
 5. see if the docker:alpine image port 3000 is mapped to localhost:80
 ```bash
 $ curl localhost
-
 ```
 
 6. to edit the js code... just cd into the code/ folder
