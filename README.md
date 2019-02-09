@@ -146,12 +146,10 @@ $ vagrant ssh-config
 ### Provisioning using vagrant in the shell and w/ puppet
 
 1. Clone Sample Vagrantfile: [https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet](https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet)
-```bash
-$ git clone https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet.git vagrant
-```
+`$ git clone https://github.com/linuxacademy/content-LPIC-OT-vagrant-puppet.git vagrant `
 
 2. Setup the vagrant file 
-```bash
+```yml
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
     web.vm.box = "ubuntu/trusty64"
@@ -166,12 +164,10 @@ end
 ```
 
 3. launch the webserver only
-```bash
-$ vagrant up web
-```
+`$ vagrant up web`
 
 4. Add provisioning to the Vagrantfile
-```bash
+```yml
 Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
     web.vm.box = "ubuntu/trusty64"
@@ -190,9 +186,7 @@ end
 ```
 
 5. relaunch what is up (only the web so far)
-```bash
-$ vagrant reload --provision
-```
+` $ vagrant reload --provision `
 
 6. Add Puppet provider to the Vagrantfile
 ```bash
