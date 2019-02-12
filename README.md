@@ -1512,6 +1512,25 @@ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Docum
 - Nexus - supports repo tools and IDEs
 
 - Jenkins Pluggins - Used to extend Jenkins; access from the GUI:8080
+
+
+### Jenkins Installation on CentOS
+- jenkins.wiki.io
+```bash
+$ yum install -y java
+$ wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+$ rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+$ yum install -y java
+$ yum install -y jenkins
+$ service jenkins start
+# make sure jenkins always startes up upon reboot
+$ chkconfig jenkins
+```
+- Setup on GUI:8080
+```bash
+$ cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
 - Junkins Slave
   - Docker Certification Distro (versus CentOS)
   - install:
@@ -1550,23 +1569,41 @@ $ ssh jenkins@slaveserver
 - Launch slave agents via SSH, Host: slaveserver, Credentials: SSH Username w/ private key: username: Jenkins, From home master, Manual trusted key verification strategy
 - Install packer into bin, install unzip, install git
 
+- Setup on Github
+  - Get the public key, copy and paste into SSH & GPG keys
 
-### Jenkins Installation on CentOS
-- jenkins.wiki.io
 ```bash
-$ yum install -y java
-$ wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-$ rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-$ yum install -y java
-$ yum install -y jenkins
-$ service jenkins start
-# make sure jenkins always startes up upon reboot
-$ chkconfig jenkins
+$ cat /var/lib/jenkins/.ssh/id_rsa.pub
 ```
-- Setup on GUI:8080
+
+- Jenkins: Create new job: "Docker Build with Packer", Freestype Projects
+  - Restrict where project can be run, enter build slave, 
+  - This project is paramarized, name: repo_name, default value: la/express
+  - Source code: git
+  - Clone or download SSH link, paste into Repo URL
+  - Build, execute shell, Command: /usr/local/bin/packer build -var "repository=${repo_name}" -var "tag=${BUILD_NUMBER}" packer.json
+  - Save, Build w/ parameters  
+  - On Slave CLI:
+
 ```bash
-$ cat /var/lib/jenkins/secrets/initialAdminPassword
+$ docker images
+$ ls /var/lib/jenkins/workspace
 ```
+
+#### Jenkins: Test Driven Dev Project
+
+- New item: Freestyle Project: "NodeJSTDD"
+- Git: https://github.com/linuxacademy/content-lpic-ot-701-tdd.git
+- Color ANSI Console Output: xterm
+- Build step: Execute shell:
+
+```bash
+$ npm install
+$ npm test
+```
+
+- Add post action build: Publish JUunit Test Results: report.xml
+- Save: Build Now
 
 
 ## GIT
