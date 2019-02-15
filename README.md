@@ -1605,6 +1605,27 @@ $ npm test
 - Add post action build: Publish JUunit Test Results: report.xml
 - Save: Build Now
 
+#### Building a Docker Image using Packer and Jenkins
+
+- Add port to firewall, reload firewall and check open ports
+
+```bash
+$ firewall-cmd --zone=public --permanent --add-port=8080/tcp
+$ firewall-cmd --reload
+$ firewall-cmd --zone=public --permanent --list-ports
+$ cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+- create admin
+- Create New Job: "BuildAppImage" as FreeStyle Project
+  - This Project is Paramaterized and "string"
+  - Name: repo_name; value: la/express; 
+  - Source code Management: Git; https://github.com/linuxacademy/content-lpic-ot-701-packer-docker
+  - Execute Shell; Command: /user/local/bin/packer build -var "repository=${repo_name}" - var "tag=${BUILD_NUMBER}" packer.json
+- Execute Build: Build
+
+```bash
+$ docker images
+```
 
 ## GIT
 
